@@ -1,0 +1,10 @@
+Index: libpqxx/tools/splitconfig
+===================================================================
+--- libpqxx.orig/tools/splitconfig
++++ libpqxx/tools/splitconfig
+@@ -1,4 +1,4 @@
+-#! /usr/bin/env python
++#! /usr/bin/env nativepython
+
+ """Extract configuration items into various configuration headers.
+

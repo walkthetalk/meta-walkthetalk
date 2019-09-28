@@ -1,0 +1,15 @@
+# LAYER_CONF_VERSION is increased each time build/conf/bblayers.conf
+# changes incompatibly
+LCONF_VERSION = "6"
+
+BBPATH = "${TOPDIR}"
+BBFILES ?= ""
+
+BBLAYERS ?= " \
+  ##COREBASE##/meta \
+  ##COREBASE##/../meta-xilinx/meta-xilinx-bsp \
+  ##COREBASE##/../meta-xilinx/meta-xilinx-standalone \
+  ##COREBASE##/../meta-xilinx/meta-xilinx-contrib \
+  ##COREBASE##/../meta-qt5 \
+  ##COREBASE##/../meta-walkthetalk \
+"

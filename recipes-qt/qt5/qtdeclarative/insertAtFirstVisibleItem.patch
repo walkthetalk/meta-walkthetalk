@@ -1,0 +1,29 @@
+Index: qtdeclarative-opensource-src-5.8.0/src/quick/items/qquicklistview.cpp
+===================================================================
+--- qtdeclarative-opensource-src-5.8.0.orig/src/quick/items/qquicklistview.cpp
++++ qtdeclarative-opensource-src-5.8.0/src/quick/items/qquicklistview.cpp
+@@ -3117,7 +3117,7 @@ bool QQuickListViewPrivate::applyInserti
+             // Special case of appending an item to the model.
+             index = visibleItems.count();
+         } else {
+-            if (modelIndex < visibleIndex) {
++            if (modelIndex <= visibleIndex) {
+                 // Insert before visible items
+                 visibleIndex += count;
+                 for (int i = 0; i < visibleItems.count(); ++i) {
+@@ -3150,13 +3150,13 @@ bool QQuickListViewPrivate::applyInserti
+     }
+ 
+     bool visibleAffected = false;
+-    if (insertResult->visiblePos.isValid() && pos < insertResult->visiblePos) {
++    if (insertResult->visiblePos.isValid() && pos <= insertResult->visiblePos) {
+         // Insert items before the visible item.
+         int insertionIdx = index;
+         int i = 0;
+         qreal from = tempPos - displayMarginBeginning - buffer;
+ 
+-        if (insertionIdx < visibleIndex) {
++        if (insertionIdx <= visibleIndex) {
+             if (pos >= from) {
+                 // items won't be visible, just note the size for repositioning
+                 insertResult->sizeChangesBeforeVisiblePos += count * (averageSize + spacing);

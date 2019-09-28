@@ -1,0 +1,19 @@
+Index: git/configure.ac
+===================================================================
+--- git.orig/configure.ac
++++ git/configure.ac
+@@ -298,14 +298,6 @@ fi # End of gcc-specific part.
+ 
+ # Find PostgreSQL includes and libraries
+ AC_PATH_PROGS(PG_CONFIG, pg_config)
+-if test -z "$PG_CONFIG" || test ! -r "$PG_CONFIG"
+-then
+-	AC_MSG_ERROR([
+-PostgreSQL configuration script pg_config not found.  Make sure this is in your
+-command path before configuring.  Without it, the configure script has no way to
+-find the right location for the libpq library and its headers.
+-])
+-fi
+ 
+ AC_ARG_WITH(
+     [postgres-include],

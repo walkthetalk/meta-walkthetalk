@@ -1,0 +1,105 @@
+#!/usr/bin/env bash
+
+set -e
+
+print_help ()
+{
+	echo "usage: $0 [option] <build_dir>"
+	echo "option:"
+	echo "     -s    running on server."
+	echo "     -u    update repositories before create build directory."
+	echo "     -m <machine>"
+	echo "           for <machine>"
+	echo "     -h    print this infomation."
+}
+
+# process arguments
+RUNNING_ON_SERVER="false"
+UPDATE_BEFORE_BUILD="false"
+MACHINE=""
+
+while getopts ":sum:h" opt
+do
+	case $opt in
+		h )
+			print_help
+			exit 0
+			;;
+		s )
+			RUNNING_ON_SERVER="true"
+			;;
+		u )
+			UPDATE_BEFORE_BUILD="true"
+			;;
+		m )
+			MACHINE="$OPTARG"
+			;;
+		? )
+			print_help
+			exit 1
+			;;
+	esac
+done
+shift $(($OPTIND - 1))
+BUILD_DIR=$1
+
+if [ "${BUILD_DIR}" == "" ]; then
+	print_help
+	exit 1
+fi
+
+SELF_DIR="`readlink -fe ${BASH_SOURCE} | xargs dirname`"
+PANGUBASE="`readlink -fe ${SELF_DIR}/../../`"
+
+# make build directory
+if ! [ -d ${BUILD_DIR} ]; then
+	mkdir -p ${BUILD_DIR}
+fi
+BUILD_DIR="`readlink -fe $1`"
+echo "::NOTE: build directory is ${BUILD_DIR}"
+
+# download repos
+repos=(
+	meta-xilinx
+	meta-qt5
+	meta-walkthetalk
+)
+
+cd ${PANGUBASE}
+for r in ${repos[@]}; do
+	if ! [ -d ${r} ]; then
+		git clone http://gitlab.dev-srv.com/optimus/${r}.git
+	elif [ "${UPDATE_BEFORE_BUILD}" == "true" ]; then
+		git --git-dir=${PWD}/${r}/.git --work-tree=${PWD}/${r} pull -u
+	fi
+done
+
+# generate new build script
+OPTIMUS_SCRIPT_DIR="${SELF_DIR}"
+OE_ENV_SCRIPT="${PANGUBASE}/poky/oe-init-build-env"
+ORIGINAL_BUILD_SCRIPT="${OPTIMUS_SCRIPT_DIR}/bbext"
+FINAL_BUILD_SCRIPT="${BUILD_DIR}/bbext"
+
+if ! [ -f ${FINAL_BUILD_SCRIPT} ]; then
+	# copy build script
+	sed "s:^OPTIMUS_SCRIPT_DIR.*:OPTIMUS_SCRIPT_DIR=\"${OPTIMUS_SCRIPT_DIR}\":" ${ORIGINAL_BUILD_SCRIPT} | \
+		sed "s:^OE_ENV_SCRIPT.*:OE_ENV_SCRIPT=\"${OE_ENV_SCRIPT}\":" | \
+		sed "s:^export TEMPLATECONF=.*:export TEMPLATECONF=\"${PANGUBASE}/meta-walkthetalk/conf\":" > ${FINAL_BUILD_SCRIPT}
+	chmod +x ${FINAL_BUILD_SCRIPT}
+
+	# execute to generate conf files
+	${FINAL_BUILD_SCRIPT} --version
+
+	# for sstate sharing
+	if [ "${RUNNING_ON_SERVER}" == "true" ]; then
+	echo "
+#BASE_WORKDIR = \"/tmp/optimus_workdir\"
+SSTATE_DIR = \"/mnt/optimus/sstate\"
+SSTATE_MIRRORS = \"\"
+" >> ${BUILD_DIR}/conf/local.conf
+	fi
+
+	if [ "x${MACHINE}" != "x" ]; then
+		sed -i "s/^MACHINE .*$/MACHINE = \"${MACHINE}\"/" ${BUILD_DIR}/conf/local.conf
+	fi
+fi

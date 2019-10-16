@@ -25,7 +25,7 @@ SRC_URI[sha256sum] = "361f9c953bb5ca7dbc922c3f698170523667f6a2f43961ffb88fa47b6b
 S = "${WORKDIR}/linux-${LINUX_VERSION}"
 
 do_configure_prepend() {
-	make O=${B} -C ${S} ${MACHINE}_defconfig
+	make O=${B} -C ${S} ${KERNEL_MACHINE}
 
 	echo "# Global settings from linux recipe" >> ${B}/.config
 	echo "CONFIG_LOCALVERSION=\"${LINUX_VERSION_EXTENSION}\"" >> ${B}/.config

@@ -60,7 +60,7 @@ echo "::NOTE: build directory is ${BUILD_DIR}"
 
 # download repos
 repos=(
-	meta-xilinx
+	poky
 	meta-qt5
 	meta-walkthetalk
 )

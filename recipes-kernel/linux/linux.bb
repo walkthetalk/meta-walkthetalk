@@ -17,6 +17,7 @@ SRC_URI = "http://www.kernel.org/pub/linux/kernel/v5.x/linux-${LINUX_VERSION}.ta
 SRC_URI_append_fsref = " \
 	file://0001-simplefb-add-memory-region-support-for-device-tree.patch \
 	file://add_fsref.patch \
+	file://add_sys_file_for_load_bitstream.patch \
 "
 
 SRC_URI[md5sum] = "983a0a17a021e5066dce8a2eee626b6a"

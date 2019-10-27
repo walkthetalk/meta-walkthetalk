@@ -1,7 +1,7 @@
-Index: fsref.JpqzB/arch/arm/boot/dts/zynq-fsref.dts
+Index: linux/arch/arm/boot/dts/zynq-fsref.dts
 ===================================================================
 --- /dev/null
-+++ fsref.JpqzB/arch/arm/boot/dts/zynq-fsref.dts
++++ linux/arch/arm/boot/dts/zynq-fsref.dts
 @@ -0,0 +1,263 @@
 +/*
 + * system-top.dts
@@ -266,11 +266,11 @@ Index: fsref.JpqzB/arch/arm/boot/dts/zynq-fsref.dts
 +	};
 +};
 +
-Index: fsref.JpqzB/arch/arm/configs/fsref_defconfig
+Index: linux/arch/arm/configs/fsref_defconfig
 ===================================================================
 --- /dev/null
-+++ fsref.JpqzB/arch/arm/configs/fsref_defconfig
-@@ -0,0 +1,224 @@
++++ linux/arch/arm/configs/fsref_defconfig
+@@ -0,0 +1,226 @@
 +# CONFIG_SWAP is not set
 +CONFIG_SYSVIPC=y
 +CONFIG_NO_HZ=y
@@ -466,6 +466,8 @@ Index: fsref.JpqzB/arch/arm/configs/fsref_defconfig
 +CONFIG_IIO=y
 +CONFIG_XILINX_XADC=y
 +CONFIG_AUTOFS4_FS=y
++CONFIG_FPGA=y
++CONFIG_FPGA_MGR_ZYNQ_FPGA=y
 +CONFIG_EXT4_FS=y
 +# CONFIG_EXT4_USE_FOR_EXT2 is not set
 +CONFIG_F2FS_FS=y

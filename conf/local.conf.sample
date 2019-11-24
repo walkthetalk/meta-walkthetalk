@@ -105,7 +105,7 @@ DISTRO ?= "optimus"
 #  - 'package_rpm' for rpm style packages
 # E.g.: PACKAGE_CLASSES ?= "package_rpm package_deb package_ipk"
 # We default to rpm:
-PACKAGE_CLASSES ?= "package_tar"
+PACKAGE_CLASSES ?= "package_rpm"
 
 #
 # SDK target architecture
@@ -234,16 +234,14 @@ CONF_VERSION = "1"
 
 # custom
 DEV_SRV_URL := "/mnt/datum/repositories"
-LLVM_GIT ?= "git://${DEV_SRV_URL}/llvm-mirror"
-LLVM_GIT_PROTOCOL ?= "file"
-QT_GIT ?= "git://${DEV_SRV_URL}/qt"
-QT_GIT_PROTOCOL ?= "file"
-OPENCV_GIT ?= "git://${DEV_SRV_URL}/opencv"
-OPENCV_GIT_PROTOCOL ?= "file"
+LLVM_GIT := "git://${DEV_SRV_URL}/llvm-mirror"
+LLVM_GIT_PROTOCOL := "file"
+QT_GIT := "git://${DEV_SRV_URL}/qt"
+QT_GIT_PROTOCOL := "file"
 OPENCV_GIT := "git://${DEV_SRV_URL}/opencv"
 OPENCV_GIT_PROTOCOL := "file"
 
-SOURCE_MIRROR_URL ?= "file:///mnt/datum/iso/yocto-sources/sources"
+SOURCE_MIRROR_URL := "file:///mnt/datum/iso/yocto-sources/sources"
 INHERIT += "own-mirrors"
 
 BB_GENERATE_MIRROR_TARBALLS = "1"

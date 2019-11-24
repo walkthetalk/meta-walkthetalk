@@ -38,6 +38,7 @@ toolchain_create_tree_env_script_append() {
     echo 'export OE_QMAKE_CXX="$CXX"' >> $script
     echo 'export OE_QMAKE_LINK="$CXX"' >> $script
     echo 'export OE_QMAKE_AR="$AR"' >> $script
+    echo 'export OE_QMAKE_STRIP="$STRIP"' >> $script
     echo 'export OE_QMAKE_LIBDIR_QT=${STAGING_DIR_TARGET}${OE_QMAKE_PATH_LIBS}' >> $script
     echo 'export OE_QMAKE_INCDIR_QT=${STAGING_DIR_TARGET}${OE_QMAKE_PATH_QT_HEADERS}' >> $script
     echo 'export OE_QMAKE_QMAKE=${QT_TOOLS_PREFIX}/qmake' >> $script

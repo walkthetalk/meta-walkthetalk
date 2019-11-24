@@ -3,30 +3,9 @@ set -e
 
 BUILD_DIR=`readlink -f $0 | xargs dirname`
 
-OPTIMUS_SCRIPT_DIR="TODO: FIX ME"
 OE_ENV_SCRIPT="TODO: FIX ME"
 export TEMPLATECONF="TODO: FIX ME"
 source ${OE_ENV_SCRIPT} ${BUILD_DIR}
 unset TEMPLATECONF
 
-extract_sysroot()
-{
-	SYSROOT_FOR_ECLIPSE="${BUILD_DIR}/sysroot_for_eclipse"
-	rm -rf ${SYSROOT_FOR_ECLIPSE}*
-	MACHINE="`cat ${BUILD_DIR}/conf/local.conf | grep '^MACHINE' | sed 's/^MACHINE.*\"\(.*\)\"$/\1/'`"
-	ROOTFS_IMAGE_FILE="${BUILD_DIR}/tmp/deploy/images/${BUILD_ARGS}-${MACHINE}.tar.bz2"
-	if ! [ -f "${ROOTFS_IMAGE_FILE}" ]; then
-		echo "ERROR: can't find rootfs image file: ${ROOTFS_IMAGE_FILE}"
-		exit 3
-	fi
-	runqemu-extract-sdk ${ROOTFS_IMAGE_FILE} ${SYSROOT_FOR_ECLIPSE}
-}
-
-if [ "`echo $*|grep ' and extract$'`" != "" ]; then
-	BUILD_ARGS="`echo $* | sed 's/ *and extract$//'`"
-	bitbake ${BUILD_ARGS}
-	echo "NOTE: extrace sysroot"
-	extract_sysroot ${BUILD_ARGS}
-else
-	bitbake $*
-fi
+bitbake $*

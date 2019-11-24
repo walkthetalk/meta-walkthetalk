@@ -105,7 +105,7 @@ DISTRO ?= "optimus"
 #  - 'package_rpm' for rpm style packages
 # E.g.: PACKAGE_CLASSES ?= "package_rpm package_deb package_ipk"
 # We default to rpm:
-PACKAGE_CLASSES ?= "package_rpm"
+PACKAGE_CLASSES ?= "package_tar"
 
 #
 # SDK target architecture
@@ -233,7 +233,20 @@ CONF_VERSION = "1"
 #PRD_LOCAL_TEST_SRC_DIR = "/home/ll/repos"
 
 # custom
-SOURCE_MIRROR_URL = "file:///mnt/datum/iso/yocto-sources/sources/"
+DEV_SRV_URL := "/mnt/datum/repositories"
+LLVM_GIT ?= "git://${DEV_SRV_URL}/llvm-mirror"
+LLVM_GIT_PROTOCOL ?= "file"
+QT_GIT ?= "git://${DEV_SRV_URL}/qt"
+QT_GIT_PROTOCOL ?= "file"
+OPENCV_GIT ?= "git://${DEV_SRV_URL}/opencv"
+OPENCV_GIT_PROTOCOL ?= "file"
+
+SOURCE_MIRROR_URL ?= "file:///mnt/datum/iso/yocto-sources/sources"
+INHERIT += "own-mirrors"
+
+BB_GENERATE_MIRROR_TARBALLS = "1"
+INHERIT += "read_only_rootfs_systemd"
+
 NO_RECOMMENDATIONS = "1"
 ENABLE_BINARY_LOCALE_GENERATION = "1"
 LOCALE_UTF8_ONLY = "1"

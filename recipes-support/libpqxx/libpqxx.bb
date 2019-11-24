@@ -1,9 +1,9 @@
 DESCRIPTION = "C++ client API for PostgreSQL"
 SECTION = "libs"
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://COPYING;md5=b47c6e627b703512c8bbe2c0cf86eec3"
+LIC_FILES_CHKSUM = "file://COPYING;md5=3d1b370cdd0dae4a6607aa8e5071e67b"
 
-PV = "6.1.0"
+PV = "6.4.5"
 PR = "r1"
 
 inherit autotools
@@ -19,8 +19,7 @@ RDEPENDS_${PN} = " \
 "
 
 SRC_URI = " \
-	git://github.com/jtv/libpqxx.git;protocol=https;tag=44970d7331e4f369e160af0135a2d1fc16f27a21 \
-	file://disable_check_pg_config.patch \
+	git://github.com/jtv/libpqxx.git;protocol=https;branch=6.4;tag=${PV} \
 	file://subst_python_shebang.patch \
 "
 
@@ -34,7 +33,7 @@ EXTRA_OECONF = " \
 "
 
 FILES_${PN} = " \
-	${libdir}/libpqxx-6.1.so \
+	${libdir}/libpqxx-6.4.so \
 	${bindir}/pqxx-config \
 "
 

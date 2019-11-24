@@ -90,6 +90,13 @@ if ! [ -f ${FINAL_BUILD_SCRIPT} ]; then
 	# execute to generate conf files
 	${FINAL_BUILD_SCRIPT} --version
 
+	# for parallel optimization, only use physical core
+	CPUNUM="`lscpu|grep "^Core"|sed 's/.*  *//'`"
+	echo "
+#only use physical cpu cores
+BB_NUMBER_THREADS=\"${CPUNUM}\"
+PARALLEL_MAKE=\"-j ${CPUNUM}\"" >> ${BUILD_DIR}/conf/local.conf
+
 	# for sstate sharing
 	if [ "${RUNNING_ON_SERVER}" == "true" ]; then
 	echo "

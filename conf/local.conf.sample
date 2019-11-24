@@ -240,6 +240,8 @@ QT_GIT ?= "git://${DEV_SRV_URL}/qt"
 QT_GIT_PROTOCOL ?= "file"
 OPENCV_GIT ?= "git://${DEV_SRV_URL}/opencv"
 OPENCV_GIT_PROTOCOL ?= "file"
+OPENCV_GIT := "git://${DEV_SRV_URL}/opencv"
+OPENCV_GIT_PROTOCOL := "file"
 
 SOURCE_MIRROR_URL ?= "file:///mnt/datum/iso/yocto-sources/sources"
 INHERIT += "own-mirrors"

@@ -1,8 +1,8 @@
-Index: u-boot/arch/arm/dts/zynq-fsref.dts
+Index: ax7021.PmXTL/arch/arm/dts/zynq-ax7021.dts
 ===================================================================
 --- /dev/null
-+++ u-boot/arch/arm/dts/zynq-fsref.dts
-@@ -0,0 +1,188 @@
++++ ax7021.PmXTL/arch/arm/dts/zynq-ax7021.dts
+@@ -0,0 +1,189 @@
 +/*
 + * system-top.dts
 + * system.dts
@@ -15,7 +15,7 @@ Index: u-boot/arch/arm/dts/zynq-fsref.dts
 +/ {
 +	chosen {
 +		bootargs = "earlycon uio_pdrv_genirq.of_id=generic-uio";
-+		stdout-path = "serial0:115200n8";
++		stdout-path = "serial1:115200n8";
 +	};
 +	aliases {
 +		ethernet0 = &gem0;
@@ -155,6 +155,7 @@ Index: u-boot/arch/arm/dts/zynq-fsref.dts
 +&usb0 {
 +	phy_type = "ulpi";
 +	status = "okay";
++	usb-reset = <&gpio0 8 0>;
 +};
 +&clkc {
 +	fclk-enable = <0xf>;
@@ -191,10 +192,10 @@ Index: u-boot/arch/arm/dts/zynq-fsref.dts
 +	};
 +};
 +
-Index: u-boot/board/xilinx/zynq/zynq-fsref/ps7_init_gpl.c
+Index: ax7021.PmXTL/board/xilinx/zynq/zynq-ax7021/ps7_init_gpl.c
 ===================================================================
 --- /dev/null
-+++ u-boot/board/xilinx/zynq/zynq-fsref/ps7_init_gpl.c
++++ ax7021.PmXTL/board/xilinx/zynq/zynq-ax7021/ps7_init_gpl.c
 @@ -0,0 +1,1092 @@
 +/******************************************************************************
 +* (c) Copyright 2010-2018 Xilinx, Inc. All rights reserved.
@@ -388,8 +389,8 @@ Index: u-boot/board/xilinx/zynq/zynq-fsref/ps7_init_gpl.c
 +    EMIT_MASKWRITE(0XF8000718, 0x00003FFFU ,0x00000602U),
 +    EMIT_MASKWRITE(0XF800071C, 0x00003FFFU ,0x00000600U),
 +    EMIT_MASKWRITE(0XF8000720, 0x00003FFFU ,0x00000600U),
-+    EMIT_MASKWRITE(0XF8000724, 0x00003F01U ,0x00001601U),
-+    EMIT_MASKWRITE(0XF8000728, 0x00003FFFU ,0x00001600U),
++    EMIT_MASKWRITE(0XF8000724, 0x00003FFFU ,0x00001600U),
++    EMIT_MASKWRITE(0XF8000728, 0x00003F01U ,0x00001601U),
 +    EMIT_MASKWRITE(0XF800072C, 0x00003FFFU ,0x00001600U),
 +    EMIT_MASKWRITE(0XF8000730, 0x00003FFFU ,0x000016E0U),
 +    EMIT_MASKWRITE(0XF8000734, 0x00003FFFU ,0x000016E1U),
@@ -433,7 +434,7 @@ Index: u-boot/board/xilinx/zynq/zynq-fsref/ps7_init_gpl.c
 +    EMIT_MASKWRITE(0XF80007CC, 0x00003FFFU ,0x00001280U),
 +    EMIT_MASKWRITE(0XF80007D0, 0x00003FFFU ,0x00001280U),
 +    EMIT_MASKWRITE(0XF80007D4, 0x00003FFFU ,0x00001280U),
-+    EMIT_MASKWRITE(0XF8000830, 0x003F003FU ,0x00090037U),
++    EMIT_MASKWRITE(0XF8000830, 0x003F003FU ,0x000A0037U),
 +    EMIT_MASKWRITE(0XF8000834, 0x003F003FU ,0x003A0039U),
 +    EMIT_WRITE(0XF8000004, 0x0000767BU),
 +    EMIT_EXIT(),
@@ -654,8 +655,8 @@ Index: u-boot/board/xilinx/zynq/zynq-fsref/ps7_init_gpl.c
 +    EMIT_MASKWRITE(0XF8000718, 0x00003FFFU ,0x00000602U),
 +    EMIT_MASKWRITE(0XF800071C, 0x00003FFFU ,0x00000600U),
 +    EMIT_MASKWRITE(0XF8000720, 0x00003FFFU ,0x00000600U),
-+    EMIT_MASKWRITE(0XF8000724, 0x00003F01U ,0x00001601U),
-+    EMIT_MASKWRITE(0XF8000728, 0x00003FFFU ,0x00001600U),
++    EMIT_MASKWRITE(0XF8000724, 0x00003FFFU ,0x00001600U),
++    EMIT_MASKWRITE(0XF8000728, 0x00003F01U ,0x00001601U),
 +    EMIT_MASKWRITE(0XF800072C, 0x00003FFFU ,0x00001600U),
 +    EMIT_MASKWRITE(0XF8000730, 0x00003FFFU ,0x000016E0U),
 +    EMIT_MASKWRITE(0XF8000734, 0x00003FFFU ,0x000016E1U),
@@ -699,7 +700,7 @@ Index: u-boot/board/xilinx/zynq/zynq-fsref/ps7_init_gpl.c
 +    EMIT_MASKWRITE(0XF80007CC, 0x00003FFFU ,0x00001280U),
 +    EMIT_MASKWRITE(0XF80007D0, 0x00003FFFU ,0x00001280U),
 +    EMIT_MASKWRITE(0XF80007D4, 0x00003FFFU ,0x00001280U),
-+    EMIT_MASKWRITE(0XF8000830, 0x003F003FU ,0x00090037U),
++    EMIT_MASKWRITE(0XF8000830, 0x003F003FU ,0x000A0037U),
 +    EMIT_MASKWRITE(0XF8000834, 0x003F003FU ,0x003A0039U),
 +    EMIT_WRITE(0XF8000004, 0x0000767BU),
 +    EMIT_EXIT(),
@@ -918,8 +919,8 @@ Index: u-boot/board/xilinx/zynq/zynq-fsref/ps7_init_gpl.c
 +    EMIT_MASKWRITE(0XF8000718, 0x00003FFFU ,0x00000602U),
 +    EMIT_MASKWRITE(0XF800071C, 0x00003FFFU ,0x00000600U),
 +    EMIT_MASKWRITE(0XF8000720, 0x00003FFFU ,0x00000600U),
-+    EMIT_MASKWRITE(0XF8000724, 0x00003F01U ,0x00001601U),
-+    EMIT_MASKWRITE(0XF8000728, 0x00003FFFU ,0x00001600U),
++    EMIT_MASKWRITE(0XF8000724, 0x00003FFFU ,0x00001600U),
++    EMIT_MASKWRITE(0XF8000728, 0x00003F01U ,0x00001601U),
 +    EMIT_MASKWRITE(0XF800072C, 0x00003FFFU ,0x00001600U),
 +    EMIT_MASKWRITE(0XF8000730, 0x00003FFFU ,0x000016E0U),
 +    EMIT_MASKWRITE(0XF8000734, 0x00003FFFU ,0x000016E1U),
@@ -963,7 +964,7 @@ Index: u-boot/board/xilinx/zynq/zynq-fsref/ps7_init_gpl.c
 +    EMIT_MASKWRITE(0XF80007CC, 0x00003FFFU ,0x00001280U),
 +    EMIT_MASKWRITE(0XF80007D0, 0x00003FFFU ,0x00001280U),
 +    EMIT_MASKWRITE(0XF80007D4, 0x00003FFFU ,0x00001280U),
-+    EMIT_MASKWRITE(0XF8000830, 0x003F003FU ,0x00090037U),
++    EMIT_MASKWRITE(0XF8000830, 0x003F003FU ,0x000A0037U),
 +    EMIT_MASKWRITE(0XF8000834, 0x003F003FU ,0x003A0039U),
 +    EMIT_WRITE(0XF8000004, 0x0000767BU),
 +    EMIT_EXIT(),
@@ -1288,10 +1289,10 @@ Index: u-boot/board/xilinx/zynq/zynq-fsref/ps7_init_gpl.c
 +
 +
 +
-Index: u-boot/board/xilinx/zynq/zynq-fsref/ps7_init_gpl.h
+Index: ax7021.PmXTL/board/xilinx/zynq/zynq-ax7021/ps7_init_gpl.h
 ===================================================================
 --- /dev/null
-+++ u-boot/board/xilinx/zynq/zynq-fsref/ps7_init_gpl.h
++++ ax7021.PmXTL/board/xilinx/zynq/zynq-ax7021/ps7_init_gpl.h
 @@ -0,0 +1,129 @@
 +/******************************************************************************
 +*
@@ -1422,10 +1423,10 @@ Index: u-boot/board/xilinx/zynq/zynq-fsref/ps7_init_gpl.h
 +}
 +#endif
 +
-Index: u-boot/configs/zynq_fsref_defconfig
+Index: ax7021.PmXTL/configs/zynq_ax7021_defconfig
 ===================================================================
 --- /dev/null
-+++ u-boot/configs/zynq_fsref_defconfig
++++ ax7021.PmXTL/configs/zynq_ax7021_defconfig
 @@ -0,0 +1,53 @@
 +CONFIG_ARM=y
 +CONFIG_SPL_SYS_DCACHE_OFF=y
@@ -1438,7 +1439,7 @@ Index: u-boot/configs/zynq_fsref_defconfig
 +CONFIG_SYS_LDSCRIPT="arch/arm/mach-zynq/u-boot.lds"
 +CONFIG_SPL_STACK_R=y
 +CONFIG_SPL_OS_BOOT=y
-+CONFIG_SYS_PROMPT="fsref> "
++CONFIG_SYS_PROMPT="ax7021> "
 +CONFIG_CMD_THOR_DOWNLOAD=y
 +CONFIG_CMD_DFU=y
 +# CONFIG_CMD_FLASH is not set
@@ -1453,7 +1454,7 @@ Index: u-boot/configs/zynq_fsref_defconfig
 +CONFIG_CMD_TFTPPUT=y
 +CONFIG_CMD_CACHE=y
 +CONFIG_CMD_EXT4_WRITE=y
-+CONFIG_DEFAULT_DEVICE_TREE="zynq-fsref"
++CONFIG_DEFAULT_DEVICE_TREE="zynq-ax7021"
 +CONFIG_NET_RANDOM_ETHADDR=y
 +CONFIG_SPL_DM_SEQ_ALIAS=y
 +CONFIG_DFU_MMC=y

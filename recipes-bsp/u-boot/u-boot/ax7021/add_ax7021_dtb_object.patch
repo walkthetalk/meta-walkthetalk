@@ -1,0 +1,12 @@
+Index: git/arch/arm/dts/Makefile
+===================================================================
+--- git.orig/arch/arm/dts/Makefile
++++ git/arch/arm/dts/Makefile
+@@ -236,6 +236,7 @@ dtb-$(CONFIG_ARCH_ZYNQ) += \
+ 	zynq-zed.dtb \
+ 	zynq-zturn.dtb \
+ 	zynq-zybo.dtb \
++	zynq-ax7021.dtb \
+ 	zynq-zybo-z7.dtb
+ dtb-$(CONFIG_ARCH_ZYNQMP) += \
+ 	avnet-ultra96-rev1.dtb			\

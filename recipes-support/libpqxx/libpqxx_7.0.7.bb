@@ -9,7 +9,7 @@ PR = "r1"
 inherit autotools
 
 DEPENDS = " \
-	python-native \
+	python3-native \
 	autoconf-archive-native \
 	postgresql \
 "

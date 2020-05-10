@@ -238,8 +238,11 @@ LLVM_GIT := "git://${DEV_SRV_URL}/llvm-mirror"
 LLVM_GIT_PROTOCOL := "file"
 QT_GIT := "git://${DEV_SRV_URL}/qt"
 QT_GIT_PROTOCOL := "file"
-OPENCV_GIT := "git://${DEV_SRV_URL}/opencv"
-OPENCV_GIT_PROTOCOL := "file"
+
+#GITHUB_MIRROR := "git://github.com"
+#GITHUB_PROTOCOL := "https"
+GITHUB_MIRROR := "git://${DEV_SRV_URL}"
+GITHUB_PROTOCOL := "file"
 
 SOURCE_MIRROR_URL := "file:///mnt/datum/iso/yocto-sources/sources"
 INHERIT += "own-mirrors"

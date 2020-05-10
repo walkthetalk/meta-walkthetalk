@@ -7,7 +7,7 @@ DEPENDS = "zlib"
 
 S = "${WORKDIR}/git"
 SRCREV = "8021ab54f02331263346a19a1a0a61ebe92a6ff1"
-SRC_URI = "git://github.com/warmcat/libwebsockets.git;protocol=https;branch=v4.0-stable"
+SRC_URI = "${GITHUB_MIRROR}/warmcat/libwebsockets.git;protocol=${GITHUB_PROTOCOL};branch=v4.0-stable"
 
 inherit cmake pkgconfig
 

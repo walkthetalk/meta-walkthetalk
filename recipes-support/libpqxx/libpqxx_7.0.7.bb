@@ -19,7 +19,7 @@ RDEPENDS_${PN} = " \
 "
 
 SRC_URI = " \
-	git://github.com/jtv/libpqxx.git;protocol=https;branch=master;tag=${PV} \
+	${GITHUB_MIRROR}/jtv/libpqxx.git;protocol=${GITHUB_PROTOCOL};branch=master;tag=${PV} \
 	"
 #	file://subst_python_shebang.patch \
 #"

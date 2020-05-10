@@ -37,12 +37,12 @@ IPP_FILENAME = "${@ipp_filename(d)}"
 IPP_MD5 = "${@ipp_md5sum(d)}"
 
 SRCREV_FORMAT = "opencv_contrib_ipp_boostdesc_vgg"
-SRC_URI = "git://github.com/opencv/opencv.git;name=opencv \
-           git://github.com/opencv/opencv_contrib.git;destsuffix=contrib;name=contrib \
-           git://github.com/opencv/opencv_3rdparty.git;branch=ippicv/master_20191018;destsuffix=ipp;name=ipp \
-           git://github.com/opencv/opencv_3rdparty.git;branch=contrib_xfeatures2d_boostdesc_20161012;destsuffix=boostdesc;name=boostdesc \
-           git://github.com/opencv/opencv_3rdparty.git;branch=contrib_xfeatures2d_vgg_20160317;destsuffix=vgg;name=vgg \
-           git://github.com/opencv/opencv_3rdparty.git;branch=contrib_face_alignment_20170818;destsuffix=face;name=face \
+SRC_URI = "${GITHUB_MIRROR}/opencv/opencv.git;protocol=${GITHUB_PROTOCOL};name=opencv \
+           ${GITHUB_MIRROR}/opencv/opencv_contrib.git;protocol=${GITHUB_PROTOCOL};destsuffix=contrib;name=contrib \
+           ${GITHUB_MIRROR}/opencv/opencv_3rdparty.git;protocol=${GITHUB_PROTOCOL};branch=ippicv/master_20191018;destsuffix=ipp;name=ipp \
+           ${GITHUB_MIRROR}/opencv/opencv_3rdparty.git;protocol=${GITHUB_PROTOCOL};branch=contrib_xfeatures2d_boostdesc_20161012;destsuffix=boostdesc;name=boostdesc \
+           ${GITHUB_MIRROR}/opencv/opencv_3rdparty.git;protocol=${GITHUB_PROTOCOL};branch=contrib_xfeatures2d_vgg_20160317;destsuffix=vgg;name=vgg \
+           ${GITHUB_MIRROR}/opencv/opencv_3rdparty.git;protocol=${GITHUB_PROTOCOL};branch=contrib_face_alignment_20170818;destsuffix=face;name=face \
            file://0001-3rdparty-ippicv-Use-pre-downloaded-ipp.patch \
            file://0002-Make-opencv-ts-create-share-library-intead-of-static.patch \
            file://0003-To-fix-errors-as-following.patch \

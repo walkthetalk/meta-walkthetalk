@@ -3,7 +3,7 @@ SECTION = "libs"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://COPYING;md5=3d1b370cdd0dae4a6607aa8e5071e67b"
 
-PV = "6.4.5"
+PV = "7.0.7"
 PR = "r1"
 
 inherit autotools
@@ -19,9 +19,10 @@ RDEPENDS_${PN} = " \
 "
 
 SRC_URI = " \
-	git://github.com/jtv/libpqxx.git;protocol=https;branch=6.4;tag=${PV} \
-	file://subst_python_shebang.patch \
-"
+	git://github.com/jtv/libpqxx.git;protocol=https;branch=master;tag=${PV} \
+	"
+#	file://subst_python_shebang.patch \
+#"
 
 S = "${WORKDIR}/git"
 
@@ -33,7 +34,7 @@ EXTRA_OECONF = " \
 "
 
 FILES_${PN} = " \
-	${libdir}/libpqxx-6.4.so \
+	${libdir}/libpqxx-7.0.so \
 	${bindir}/pqxx-config \
 "
 

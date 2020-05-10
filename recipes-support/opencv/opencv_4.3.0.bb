@@ -3,61 +3,80 @@ HOMEPAGE = "http://opencv.org/"
 SECTION = "libs"
 
 LICENSE = "BSD-3-Clause"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=6450921bb12a3133c8f5cb2a80343710"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=19598330421859a6dd353a4318091ac7"
 
 ARM_INSTRUCTION_SET_armv4 = "arm"
 ARM_INSTRUCTION_SET_armv5 = "arm"
 
 DEPENDS = "libtool swig-native bzip2 zlib glib-2.0 libwebp"
 
-SRCREV_opencv = "371bba8f54560b374fbcd47e7e02f015ac4969ad"
-SRCREV_contrib = "2c32791a9c500343568a21ea34bf2daeac2adae7"
-SRCREV_ipp = "32e315a5b106a7b89dbed51c28f8120a48b368b4"
+SRCREV_opencv = "01b2c5a77ca6dbef3baef24ebc0a5984579231d9"
+SRCREV_contrib = "e6f32c6a69043456a806a4e802ee3ce7b7059c93"
+SRCREV_ipp = "a56b6ac6f030c312b2dce17430eef13aed9af274"
 SRCREV_boostdesc = "34e4206aef44d50e6bbcd0ab06354b52e7466d26"
 SRCREV_vgg = "fccf7cd6a4b12079f73bbfb21745f9babcd4eb1d"
+SRCREV_face = "8afa57abc8229d611c4937165d20e2a2d9fc5a12"
 
 def ipp_filename(d):
     import re
     arch = d.getVar('TARGET_ARCH')
     if re.match("i.86$", arch):
-        return "ippicv_2019_lnx_ia32_general_20180723.tgz"
+        return "ippicv_2020_lnx_ia32_20191018_general.tgz"
     else:
-        return "ippicv_2019_lnx_intel64_general_20180723.tgz"
+        return "ippicv_2020_lnx_intel64_20191018_general.tgz"
 
 def ipp_md5sum(d):
     import re
     arch = d.getVar('TARGET_ARCH')
     if re.match("i.86$", arch):
-        return "4f38432c30bfd6423164b7a24bbc98a0"
+        return "ad189a940fb60eb71f291321322fe3e8"
     else:
-        return "c0bd78adb4156bbf552c1dfe90599607"
+        return "7421de0095c7a39162ae13a6098782f9"
 
 IPP_FILENAME = "${@ipp_filename(d)}"
 IPP_MD5 = "${@ipp_md5sum(d)}"
 
-OPENCV_GIT ?= "git://github.com/opencv"
-OPENCV_GIT_PROTOCOL ?= "git"
-
 SRCREV_FORMAT = "opencv_contrib_ipp_boostdesc_vgg"
-SRC_URI = "${OPENCV_GIT}/opencv.git;protocol=${OPENCV_GIT_PROTOCOL};name=opencv \
-           ${OPENCV_GIT}/opencv_contrib.git;protocol=${OPENCV_GIT_PROTOCOL};destsuffix=contrib;name=contrib \
-           ${OPENCV_GIT}/opencv_3rdparty.git;protocol=${OPENCV_GIT_PROTOCOL};branch=ippicv/master_20180723;destsuffix=ipp;name=ipp \
-           ${OPENCV_GIT}/opencv_3rdparty.git;protocol=${OPENCV_GIT_PROTOCOL};branch=contrib_xfeatures2d_boostdesc_20161012;destsuffix=boostdesc;name=boostdesc \
-           ${OPENCV_GIT}/opencv_3rdparty.git;protocol=${OPENCV_GIT_PROTOCOL};branch=contrib_xfeatures2d_vgg_20160317;destsuffix=vgg;name=vgg \
+SRC_URI = "git://github.com/opencv/opencv.git;name=opencv \
+           git://github.com/opencv/opencv_contrib.git;destsuffix=contrib;name=contrib \
+           git://github.com/opencv/opencv_3rdparty.git;branch=ippicv/master_20191018;destsuffix=ipp;name=ipp \
+           git://github.com/opencv/opencv_3rdparty.git;branch=contrib_xfeatures2d_boostdesc_20161012;destsuffix=boostdesc;name=boostdesc \
+           git://github.com/opencv/opencv_3rdparty.git;branch=contrib_xfeatures2d_vgg_20160317;destsuffix=vgg;name=vgg \
+           git://github.com/opencv/opencv_3rdparty.git;branch=contrib_face_alignment_20170818;destsuffix=face;name=face \
            file://0001-3rdparty-ippicv-Use-pre-downloaded-ipp.patch \
            file://0002-Make-opencv-ts-create-share-library-intead-of-static.patch \
            file://0003-To-fix-errors-as-following.patch \
            file://0001-Temporarliy-work-around-deprecated-ffmpeg-RAW-functi.patch \
            file://0001-Dont-use-isystem.patch \
+           file://download.patch \
            "
-PV = "4.1.0"
+PV = "4.3.0"
 
 S = "${WORKDIR}/git"
 
+# OpenCV wants to download more files during configure.  We download these in
+# do_fetch and construct a source cache in the format it expects
+OPENCV_DLDIR = "${WORKDIR}/downloads"
+
 do_unpack_extra() {
     tar xzf ${WORKDIR}/ipp/ippicv/${IPP_FILENAME} -C ${WORKDIR}
-    cp ${WORKDIR}/vgg/*.i ${WORKDIR}/contrib/modules/xfeatures2d/src
-    cp ${WORKDIR}/boostdesc/*.i ${WORKDIR}/contrib/modules/xfeatures2d/src
+
+    md5() {
+        # Return the MD5 of $1
+        echo $(md5sum $1 | cut -d' ' -f1)
+    }
+    cache() {
+        TAG=$1
+        shift
+        mkdir --parents ${OPENCV_DLDIR}/$TAG
+        for F in $*; do
+            DEST=${OPENCV_DLDIR}/$TAG/$(md5 $F)-$(basename $F)
+            test -e $DEST || ln -s $F $DEST
+        done
+    }
+    cache xfeatures2d/boostdesc ${WORKDIR}/boostdesc/*.i
+    cache xfeatures2d/vgg ${WORKDIR}/vgg/*.i
+    cache data ${WORKDIR}/face/*.dat
 }
 addtask unpack_extra after do_unpack before do_patch
 
@@ -68,16 +87,19 @@ EXTRA_OECMAKE = "-DOPENCV_EXTRA_MODULES_PATH=${WORKDIR}/contrib/modules \
     -DOPENCV_ICV_HASH=${IPP_MD5} \
     -DIPPROOT=${WORKDIR}/ippicv_lnx \
     -DOPENCV_GENERATE_PKGCONFIG=ON \
+    -DOPENCV_DOWNLOAD_PATH=${OPENCV_DLDIR} \
+    -DOPENCV_ALLOW_DOWNLOADS=OFF \
     ${@bb.utils.contains("TARGET_CC_ARCH", "-msse3", "-DENABLE_SSE=1 -DENABLE_SSE2=1 -DENABLE_SSE3=1 -DENABLE_SSSE3=1", "", d)} \
     ${@bb.utils.contains("TARGET_CC_ARCH", "-msse4.1", "-DENABLE_SSE=1 -DENABLE_SSE2=1 -DENABLE_SSE3=1 -DENABLE_SSSE3=1 -DENABLE_SSE41=1", "", d)} \
     ${@bb.utils.contains("TARGET_CC_ARCH", "-msse4.2", "-DENABLE_SSE=1 -DENABLE_SSE2=1 -DENABLE_SSE3=1 -DENABLE_SSSE3=1 -DENABLE_SSE41=1 -DENABLE_SSE42=1", "", d)} \
 "
 EXTRA_OECMAKE_append_x86 = " -DX86=ON"
 
-PACKAGECONFIG ??= "python3 eigen jpeg png tiff v4l libv4l gstreamer samples tbb gphoto2 \
+PACKAGECONFIG ??= "gapi python3 eigen jpeg png tiff v4l libv4l gstreamer samples tbb gphoto2 \
     ${@bb.utils.contains("DISTRO_FEATURES", "x11", "gtk", "", d)} \
     ${@bb.utils.contains("LICENSE_FLAGS_WHITELIST", "commercial", "libav", "", d)}"
 
+PACKAGECONFIG[gapi] = "-DWITH_ADE=ON -Dade_DIR=${STAGING_LIBDIR},-DWITH_ADE=OFF,ade"
 PACKAGECONFIG[amdblas] = "-DWITH_OPENCLAMDBLAS=ON,-DWITH_OPENCLAMDBLAS=OFF,libclamdblas,"
 PACKAGECONFIG[amdfft] = "-DWITH_OPENCLAMDFFT=ON,-DWITH_OPENCLAMDFFT=OFF,libclamdfft,"
 PACKAGECONFIG[dnn] = "-DBUILD_opencv_dnn=ON -DPROTOBUF_UPDATE_FILES=ON -DBUILD_PROTOBUF=OFF,-DBUILD_opencv_dnn=OFF,protobuf protobuf-native,"
@@ -101,8 +123,6 @@ PACKAGECONFIG[tbb] = "-DWITH_TBB=ON,-DWITH_TBB=OFF,tbb,"
 PACKAGECONFIG[text] = "-DBUILD_opencv_text=ON,-DBUILD_opencv_text=OFF,tesseract,"
 PACKAGECONFIG[tiff] = "-DWITH_TIFF=ON,-DWITH_TIFF=OFF,tiff,"
 PACKAGECONFIG[v4l] = "-DWITH_V4L=ON,-DWITH_V4L=OFF,v4l-utils,"
-PACKAGECONFIG[tests] = "-DBUILD_TESTS=ON,-DBUILD_TESTS=OFF,,"
-PACKAGECONFIG[xfeatures2d] = "-DBUILD_opencv_xfeatures2d=ON,-DBUILD_opencv_xfeatures2d=OFF,,"
 
 inherit pkgconfig cmake
 

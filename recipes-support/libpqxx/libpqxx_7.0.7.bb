@@ -1,7 +1,7 @@
 DESCRIPTION = "C++ client API for PostgreSQL"
 SECTION = "libs"
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://COPYING;md5=3d1b370cdd0dae4a6607aa8e5071e67b"
+LIC_FILES_CHKSUM = "file://COPYING;md5=f8ef8e6ae44b3eda3f116eee3a64f236"
 
 PV = "7.0.7"
 PR = "r1"

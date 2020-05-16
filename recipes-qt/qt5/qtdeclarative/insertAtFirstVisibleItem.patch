@@ -1,8 +1,16 @@
-Index: qtdeclarative-opensource-src-5.8.0/src/quick/items/qquicklistview.cpp
-===================================================================
---- qtdeclarative-opensource-src-5.8.0.orig/src/quick/items/qquicklistview.cpp
-+++ qtdeclarative-opensource-src-5.8.0/src/quick/items/qquicklistview.cpp
-@@ -3117,7 +3117,7 @@ bool QQuickListViewPrivate::applyInserti
+From a0f179673460e6377f1ca17b4ae51c8fe4c78d81 Mon Sep 17 00:00:00 2001
+From: Yi Qingliang <niqingliang2003@gmail.com>
+Date: Sat, 28 Sep 2019 19:21:21 +0800
+
+---
+ src/quick/items/qquicklistview.cpp | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/src/quick/items/qquicklistview.cpp b/src/quick/items/qquicklistview.cpp
+index 0d78070401..f3511df542 100644
+--- a/src/quick/items/qquicklistview.cpp
++++ b/src/quick/items/qquicklistview.cpp
+@@ -3508,7 +3508,7 @@ bool QQuickListViewPrivate::applyInsertionChange(const QQmlChangeSet::Change &ch
              // Special case of appending an item to the model.
              index = visibleItems.count();
          } else {
@@ -10,8 +18,8 @@ Index: qtdeclarative-opensource-src-5.8.0/src/quick/items/qquicklistview.cpp
 +            if (modelIndex <= visibleIndex) {
                  // Insert before visible items
                  visibleIndex += count;
-                 for (int i = 0; i < visibleItems.count(); ++i) {
-@@ -3150,13 +3150,13 @@ bool QQuickListViewPrivate::applyInserti
+                 for (FxViewItem *item : qAsConst(visibleItems)) {
+@@ -3539,13 +3539,13 @@ bool QQuickListViewPrivate::applyInsertionChange(const QQmlChangeSet::Change &ch
      }
  
      bool visibleAffected = false;

@@ -37,4 +37,9 @@ IMAGE_INSTALL_append += " \
 	qtvirtualkeyboard-plugins \
 "
 
+# NOTE: don't use machine specific append, or will result in missing files.
+IMAGE_INSTALL_append += " \
+	exttools \
+"
+
 inherit core-image

@@ -1,0 +1,37 @@
+#!/usr/bin/env sh
+
+# 1. prepare sdboot
+SRCDIR="/mnt/sdboot"
+if [ ! -d $SRCDIR ]; then
+	mkdir $SRCDIR
+fi
+mountpoint -q $SRCDIR
+if [ $? ];then
+	mount /dev/mmcblk0p1 $SRCDIR
+fi
+
+# 2. prepare /lib/firmware
+DSTDIR="/lib/firmware"
+if [ ! -d $DSTDIR ]; then
+	mkdir $DSTDIR
+fi
+
+# 3. prepare src file
+SRCFILE=$1
+if [ ! -f $SRCFILE ]; then
+	SRCFILE=$SRCDIR/$1
+fi
+if [ ! -f $SRCFILE ]; then
+	echo "usage: $0 <src> <dst>"
+	echo "please use valid source file!"
+	exit 1
+fi
+
+# 4. preapare dstfile
+if [ -z "$2" ]; then
+	DSTFILE="`basename $SRCFILE`"
+else
+	DSTFILE="`basename $2`"
+fi
+
+zynq_bit2bin $SRCFILE /lib/firmware/$DSTFILE

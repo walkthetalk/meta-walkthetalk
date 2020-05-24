@@ -1,0 +1,48 @@
+machine 'fsref':
+1. 制作启动卡，分区方案：
+	1) 用于启动的主分区
+		format: fat32
+		  size: 2G
+		 label: sdboot
+	2) 根文件系统分区
+		format: ext4
+		  size: remain
+		 label: sdroot
+2. 拷贝文件到sd卡
+	1) 启动分区（除rootfs.tar.gz外的所有文件）：
+		1) boot.bin
+			fsbl name is fixed determined by zynq,
+			will be loaded into OCM,
+			size limit is 192kb
+		2) uImage
+			Linux kernel
+			name is determined by:
+				include/configs/zynq-common.h: CONFIG_SPL_FS_LOAD_KERNEL_NAME
+		3) system.dtb
+			Linux device tree
+			name is determined by:
+				include/configs/zynq-common.h: CONFIG_SPL_FS_LOAD_ARGS_NAME
+		4) FPGA_TOP_0505_02.bit
+			文件名随版本变化而不同
+		5) 工具文件
+			fpga_tools/prepare_fpga
+			fpga_tools/zynq_bit2bin
+			后续版本中，rootfs会包含这两个文件，就不要手动拷贝了
+	2) 根文件系统分区：
+		mkdir <mount_dir>
+		sudo mount /dev/mmcblk0p2 <mount_dir>
+		cd <mount_dir>
+		sudo tar -xf <xxx>/rootfs.tar.gz <mount_dir>
+3. 加载FPGA
+	要求先用上一步制作的SD卡启动设备并登录
+	1) 将sd卡启动分区的工具文件拷贝到根文件系统的/usr/bin/下面
+		mkdir /mnt/sdboot
+		mount /dev/mmcblk0p1 /mnt/sdboot
+		cp /mnt/sdboot/fpga_tools/* /usr/bin/
+	2) 准备FPGA文件，此步骤用于转换endian模式
+		prepare_fpga <src_file_name> <dst_file_name>
+
+		src_file_name: 启动分区根目录下的FPGA文件名
+		dst_file_name: 转换后的文件会放在/lib/firmware目录下
+	3) 加载FPGA文件
+		echo <dst_file_name> > /sys/class/fpga_manager/fpga0/firmware

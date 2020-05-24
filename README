@@ -1,0 +1,40 @@
+machine 'fsref':
+1. prepare sd card for booting, partition schema:
+	1) primary partition for boot
+		format: fat32
+		  size: 2G
+		 label: sdboot
+	2) primary partition for rootfs
+		format: ext4
+		  size: remain
+		 label: sdroot
+2. copy boot files to sd card:
+	1) sdboot part:
+		1) boot.bin
+			fsbl name is fixed determined by zynq,
+			will be loaded into OCM,
+			size limit is 192kb
+		2) uImage
+			Linux kernel
+			name is determined by:
+				include/configs/zynq-common.h: CONFIG_SPL_FS_LOAD_KERNEL_NAME
+		3) system.dtb
+			Linux device tree
+			name is determined by:
+				include/configs/zynq-common.h: CONFIG_SPL_FS_LOAD_ARGS_NAME
+		4) fpga bit file
+			e.g. FPGA_TOP_0505_02.bit
+	2) sdroot part:
+		mkdir <mount_dir>
+		sudo mount /dev/mmcblk0p2 <mount_dir>
+		cd <mount_dir>
+		sudo tar -xf <xxx>/rootfs.tar.gz <mount_dir>
+3. load fpga
+	1) boot with sd card made in last step.
+	1) prepare fpga bit file
+		prepare_fpga <src_file_name> <dst_file_name>
+
+		src_file_name: relative file name, located in /dev/mmcblk0p1
+		dst_file_name: will be put in /lib/firmware
+	2) load fpga file
+		echo <dst_file_name> > /sys/class/fpga_manager/fpga0/firmware

@@ -43,9 +43,7 @@ RDEPENDS_${PN}-service = "ttf-unifont \
 PACKAGES =+ "${PN}-bin ${PN}-service"
 FILES_${PN}-bin = "${datadir}/fusion-splicer-app \
 	           ${datadir}/fusion-splicer-app/i18n \
-		   ${datadir}/fusion-splicer-app/qml \
 		   ${bindir} \
-		   ${sysconfdir}\
 "
 FILES_${PN}-service = "${systemd_system_unitdir}"
 
@@ -67,28 +65,12 @@ do_install() {
 	install -d ${D}${systemd_system_unitdir}
 	install -m 0644 ${WORKDIR}/fusion-splicer-app.service ${D}${systemd_system_unitdir}
 
-	# config files
-	#install -d ${D}${sysconfdir}/fusion-splicer-app/
-	#cp -dr --preserve=mode,timestamp ${S}/config/* ${D}${sysconfdir}/fusion-splicer-app/
-
 	# resource files directory
 	install -d ${D}${datadir}/fusion-splicer-app
 
 	# language files
 	install -d ${D}${datadir}/fusion-splicer-app/i18n
 	install -m 0644 ${S}/i18n/*.lang ${D}${datadir}/fusion-splicer-app/i18n
-
-	# resource files
-	cp -dr --preserve=mode,timestamp ${S}/qml ${D}${datadir}/fusion-splicer-app/qml
-
-	# keyboard map
-	install -m 0444 ${S}/jl.qmap ${D}${datadir}/fusion-splicer-app
 }
 
 FILES_${PN} += "${datadir}/fonts/*"
-
-do_install_append() {
-	#add app version info
-	install -d ${IMAGE_ROOTFS}/${sysconfdir}
-	echo "SystemVersion=${JL_DEV_VERSION}" > ${D}/${sysconfdir}/sysinfo
-}

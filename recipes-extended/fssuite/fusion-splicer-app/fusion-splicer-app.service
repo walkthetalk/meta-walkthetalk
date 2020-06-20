@@ -8,8 +8,7 @@ StandardOutput=journal+console
 StandardError=journal+console
 Type=simple
 Environment=LD_LIBRARY_PATH=/mnt/data/usr/lib
-Environment=QT_QPA_PLATFORM=linuxfb QT_QPA_FONTDIR=/usr/share/fonts/truetype QT_QPA_GENERIC_PLUGINS=evdevtablet,evdevmouse,evdevtouch QT_QPA_EVDEV_KEYBOARD_PARAMETERS=keymap=jl.qmap
-ExecStartPre=/usr/bin/dietsplashctl 100 ""
+Environment=QT_QPA_PLATFORM=linuxfb QT_QPA_FONTDIR=/usr/share/fonts/truetype QT_QPA_GENERIC_PLUGINS=evdevtablet,evdevmouse,evdevtouch
 ExecStart=/mnt/data/usr/bin/fusion-splicer-app
 WorkingDirectory=/mnt/data/usr/share/fusion-splicer-app
 

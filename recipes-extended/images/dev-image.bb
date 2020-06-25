@@ -35,6 +35,8 @@ IMAGE_INSTALL_append += " \
 	qtwebsockets-qmlplugins \
 	qtvirtualkeyboard-qmlplugins \
 	qtvirtualkeyboard-plugins \
+ \
+	qtdeclarative-tools \
 "
 
 # NOTE: don't use machine specific append, or will result in missing files.

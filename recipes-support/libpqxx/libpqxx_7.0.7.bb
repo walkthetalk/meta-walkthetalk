@@ -26,6 +26,7 @@ SRC_URI = " \
 
 S = "${WORKDIR}/git"
 
+#CXXFLAGS += "-D_GLIBCXX_USE_CXX11_ABI=0"
 EXTRA_OECONF = " \
 	--enable-shared \
 	--disable-documentation \

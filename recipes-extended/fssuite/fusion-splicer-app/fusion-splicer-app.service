@@ -7,10 +7,10 @@ Requires=fusion-splicer-svc.service
 StandardOutput=journal+console
 StandardError=journal+console
 Type=simple
-Environment=LD_LIBRARY_PATH=/mnt/data/usr/lib
+Environment=XDG_RUNTIME_DIR=/run/user/root
 Environment=QT_QPA_PLATFORM=linuxfb QT_QPA_FONTDIR=/usr/share/fonts/truetype QT_QPA_GENERIC_PLUGINS=evdevtablet,evdevmouse,evdevtouch
-ExecStart=/mnt/data/usr/bin/fusion-splicer-app
-WorkingDirectory=/mnt/data/usr/share/fusion-splicer-app
+ExecStart=/usr/bin/fusion-splicer-app
+#WorkingDirectory=/mnt/data/usr/share/fusion-splicer-app
 
 [Install]
 Alias=display-manager.service

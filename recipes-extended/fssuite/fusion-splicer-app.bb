@@ -13,7 +13,7 @@ SYSTEMD_PACKAGES = "${PN}-service"
 
 inherit systemd
 
-PV = "${SRCPV}"
+PV = "0.8"
 PR = "r1"
 SRCREV = "${AUTOREV}"
 DEPENDS = "qtbase \
@@ -26,8 +26,9 @@ DEPENDS = "qtbase \
            qttools-native \
            xlslib"
 
-RDEPENDS_${PN}-service = "ttf-unifont \
-                  xlslib\
+RDEPENDS_${PN}-service = " \
+                  postgresql \
+                  xlslib \
                   qtbase qtbase-plugins qtsvg \
                   qtdeclarative \
                   qtdeclarative-qmlplugins \
@@ -48,8 +49,8 @@ FILES_${PN}-bin = "${datadir}/fusion-splicer-app \
 FILES_${PN}-service = "${systemd_system_unitdir}"
 
 SRC_URI = " \
-	git://${DEV_SRV_URL}/jl/${PN}.git;protocol=http;user=${GITLAB_USER}:${GITLAB_PASSWD} \
-	file://${PN}.service \
+	git:///mnt/datum/repositories/walkthetalk/fsref.app.git \
+	file://${BPN}.service \
 "
 
 S = "${WORKDIR}/git"

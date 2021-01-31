@@ -2,7 +2,7 @@ Index: linux/arch/arm/boot/dts/zynq-fsref.dts
 ===================================================================
 --- /dev/null
 +++ linux/arch/arm/boot/dts/zynq-fsref.dts
-@@ -0,0 +1,315 @@
+@@ -0,0 +1,325 @@
 +/*
 + * system-top.dts
 + * system.dts

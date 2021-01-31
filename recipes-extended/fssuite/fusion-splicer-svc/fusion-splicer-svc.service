@@ -1,0 +1,12 @@
+
+[Unit]
+Description=Fusion Splicer Service
+
+[Service]
+StandardOutput=journal+console
+StandardError=journal+console
+Type=simple
+#Environment=LD_LIBRARY_PATH=/mnt/data/usr/lib
+#ExecStartPre=/usr/bin/drv_autoload.sh
+ExecStartPre=/usr/bin/start_fs.sh
+ExecStart=/usr/bin/fusion-splicer-svc

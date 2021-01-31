@@ -2,16 +2,16 @@ SUMMARY = "Opencv : The Open Computer Vision Library"
 HOMEPAGE = "http://opencv.org/"
 SECTION = "libs"
 
-LICENSE = "BSD-3-Clause"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=19598330421859a6dd353a4318091ac7"
+LICENSE = "Apache-2.0"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=3b83ef96387f14655fc854ddc3c6bd57"
 
 ARM_INSTRUCTION_SET_armv4 = "arm"
 ARM_INSTRUCTION_SET_armv5 = "arm"
 
 DEPENDS = "libtool swig-native bzip2 zlib glib-2.0 libwebp"
 
-SRCREV_opencv = "01b2c5a77ca6dbef3baef24ebc0a5984579231d9"
-SRCREV_contrib = "e6f32c6a69043456a806a4e802ee3ce7b7059c93"
+SRCREV_opencv = "d5fd2f0155ffad366f9ac912dfd6d189a7a6a98e"
+SRCREV_contrib = "37315babf9984a5b6aa981644a20dd8df1a5ff02"
 SRCREV_ipp = "a56b6ac6f030c312b2dce17430eef13aed9af274"
 SRCREV_boostdesc = "34e4206aef44d50e6bbcd0ab06354b52e7466d26"
 SRCREV_vgg = "fccf7cd6a4b12079f73bbfb21745f9babcd4eb1d"
@@ -49,8 +49,9 @@ SRC_URI = "${GITHUB_MIRROR}/opencv/opencv.git;protocol=${GITHUB_PROTOCOL};name=o
            file://0001-Dont-use-isystem.patch \
            file://download.patch \
            file://0001-Make-ts-module-external.patch \
+           file://0001-samples-cmake-digits-needs-opencv_dnn-module-to-buil.patch \
            "
-PV = "4.3.0"
+SRC_URI_append_riscv64 = " file://0001-Use-Os-to-compile-tinyxml2.cpp.patch;patchdir=../contrib"
 
 S = "${WORKDIR}/git"
 
@@ -79,6 +80,8 @@ do_unpack_extra() {
     cache data ${WORKDIR}/face/*.dat
 }
 addtask unpack_extra after do_unpack before do_patch
+
+CMAKE_VERBOSE = "VERBOSE=1"
 
 EXTRA_OECMAKE = "-DOPENCV_EXTRA_MODULES_PATH=${WORKDIR}/contrib/modules \
     -DWITH_1394=OFF \
@@ -197,6 +200,13 @@ RDEPENDS_python3-opencv = "python3-core python3-numpy"
 
 RDEPENDS_${PN}-apps  = "bash"
 
+do_compile_prepend() {
+    # remove the build host info to improve reproducibility
+    if [ -f ${WORKDIR}/build/modules/core/version_string.inc ]; then
+        sed -i "s#${WORKDIR}#/workdir#g" ${WORKDIR}/build/modules/core/version_string.inc
+    fi
+}
+
 do_install_append() {
     # Move Python files into correct library folder (for multilib build)
     if [ "$libdir" != "/usr/lib" -a -d ${D}/usr/lib ]; then
@@ -204,3 +214,5 @@ do_install_append() {
         rm -rf ${D}/usr/lib
     fi
 }
+
+TOOLCHAIN = "gcc"

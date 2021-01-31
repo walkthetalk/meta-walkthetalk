@@ -1,0 +1,13 @@
+Index: xlslib/src/common/systype.h
+===================================================================
+--- xlslib.orig/src/common/systype.h
++++ xlslib/src/common/systype.h
+@@ -325,7 +325,7 @@ override the default (C++ exception thro
+ void xlslib_register_assert_reporter(xlslib_userdef_assertion_reporter *user_func);
+ 
+ #if defined(__cplusplus)
+-};
++}
+ #endif
+ 
+ #endif

@@ -7,7 +7,7 @@ Requires=fusion-splicer-svc.service
 StandardOutput=journal+console
 StandardError=journal+console
 Type=simple
-Environment=XDG_RUNTIME_DIR=/run/user/root
+Environment=XDG_RUNTIME_DIR=/run/user/root QT_QUICK_CONTROLS_CONF=/usr/share/fusion-splicer-app/qtquickcontrols2.conf
 Environment=QT_QPA_PLATFORM=linuxfb QT_QPA_FONTDIR=/usr/share/fonts/truetype QT_QPA_GENERIC_PLUGINS=evdevtablet,evdevmouse,evdevtouch
 ExecStart=/usr/bin/fusion-splicer-app
 #WorkingDirectory=/mnt/data/usr/share/fusion-splicer-app

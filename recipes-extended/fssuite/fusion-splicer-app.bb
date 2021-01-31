@@ -40,6 +40,7 @@ RDEPENDS_${PN}-bin = " \
                   qtwebsockets-qmlplugins \
                   qtvirtualkeyboard-qmlplugins \
                   qtvirtualkeyboard-plugins \
+                  source-han-sans-cn-fonts \
 "
 
 RDEPENDS_${PN}-service = " \
@@ -48,7 +49,6 @@ RDEPENDS_${PN}-service = " \
 
 PACKAGES =+ "${PN}-bin ${PN}-service"
 FILES_${PN}-bin = "${datadir}/fusion-splicer-app \
-	           ${datadir}/fusion-splicer-app/i18n \
 		   ${bindir} \
 "
 FILES_${PN}-service = "${systemd_system_unitdir}"
@@ -77,6 +77,7 @@ do_install() {
 	# language files
 	install -d ${D}${datadir}/fusion-splicer-app/i18n
 	install -m 0644 ${S}/i18n/*.lang ${D}${datadir}/fusion-splicer-app/i18n
+	install -m 0644 ${S}/resources/qtquickcontrols2.conf ${D}${datadir}/fusion-splicer-app
 }
 
 FILES_${PN} += "${datadir}/fonts/*"

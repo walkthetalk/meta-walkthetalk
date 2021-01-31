@@ -42,7 +42,7 @@ RDEPENDS_${PN}-service = " \
 
 PACKAGES =+ "${PN}-bin ${PN}-service"
 FILES_${PN}-bin = " \
-		   ${libdir} \
+		   ${base_libdir}/firmware \
 		   ${datadir} \
 		   ${bindir} \
 "
@@ -60,9 +60,9 @@ TARGET_CC_ARCH += "${LDFLAGS}"
 
 do_install() {
 	install -d ${D}${bindir}
-	install -d ${D}/${libdir}/firmware/
+	install -d ${D}/${base_libdir}/firmware/
 	install -m 0755 ${B}/output/release/bin/fusion-splicer-svc ${D}${bindir}
-	install -m 0755 ${S}/external/firmware/system.bit.bin ${D}/${libdir}/firmware/
+	install -m 0755 ${S}/external/firmware/system.bit.bin ${D}/${base_libdir}/firmware/
 
 	# service files
 	install -d ${D}${systemd_system_unitdir}

@@ -8,5 +8,5 @@ StandardError=journal+console
 Type=simple
 #Environment=LD_LIBRARY_PATH=/mnt/data/usr/lib
 #ExecStartPre=/usr/bin/drv_autoload.sh
-ExecStartPre=/usr/bin/start_fs.sh
+ExecStartPre=/usr/share/fusion-splicer-svc/start_fs.sh
 ExecStart=/usr/bin/fusion-splicer-svc

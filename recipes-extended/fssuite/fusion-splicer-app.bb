@@ -26,7 +26,7 @@ DEPENDS = "qtbase \
            qttools-native \
            xlslib"
 
-RDEPENDS_${PN}-service = " \
+RDEPENDS_${PN}-bin = " \
                   postgresql \
                   xlslib \
                   qtbase qtbase-plugins qtsvg \
@@ -39,7 +39,12 @@ RDEPENDS_${PN}-service = " \
                   qtsvg-plugins \
                   qtwebsockets-qmlplugins \
                   qtvirtualkeyboard-qmlplugins \
-                  qtvirtualkeyboard-plugins "
+                  qtvirtualkeyboard-plugins \
+"
+
+RDEPENDS_${PN}-service = " \
+		${PN}-bin \
+"
 
 PACKAGES =+ "${PN}-bin ${PN}-service"
 FILES_${PN}-bin = "${datadir}/fusion-splicer-app \

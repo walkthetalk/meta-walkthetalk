@@ -98,6 +98,11 @@ toolchain_create_tree_env_script_append() {
     echo 'export OE_QMAKE_PATH_HOST_BINS=${QT_TOOLS_PREFIX}' >> $script
     echo 'export QMAKESPEC=`qmake -query QT_INSTALL_LIBS`${QT_DIR_NAME}/mkspecs/linux-oe-g++' >> $script
 
+    # make a symbolic link to mkspecs for compatibility with QTCreator
+    (cd ${STAGING_DIR_NATIVE}${OE_QMAKE_PATH_LIBS}/${QT_DIR_NAME}; \
+          mv mkspecs mkspecs.native; \
+          ln -sf ${STAGING_DIR_TARGET}${OE_QMAKE_PATH_LIBS}/${QT_DIR_NAME}/mkspecs mkspecs;)
+
     # Use relocable sysroot
     sed -i -e 's:${STAGING_DIR_NATIVE}/:$OECORE_NATIVE_SYSROOT/:g' $script
     sed -i -e 's:${OSTAGING_DIR_TARGET}/:$OECORE_TARGET_SYSROOT/:g' $script

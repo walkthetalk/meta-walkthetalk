@@ -9,6 +9,7 @@ DEPENDS = "virtual/libc \
            u-boot-mkimage-native \
            gdb-cross-${TARGET_ARCH} \
            \
+	boost \
 	postgresql \
 	opencv \
 	gsl \

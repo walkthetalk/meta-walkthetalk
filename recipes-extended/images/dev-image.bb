@@ -15,6 +15,7 @@ IMAGE_INSTALL = "\
 	systemd-analyze \
 	lrzsz \
 	cpufrequtils \
+	i2c-tools \
 	mtd-utils \
 	strace \
 	sudo \

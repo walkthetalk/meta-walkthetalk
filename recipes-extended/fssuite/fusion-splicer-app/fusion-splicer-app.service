@@ -1,7 +1,7 @@
 [Unit]
 Description=Fusion Splicer Application
 Conflicts=getty@tty1.service systemd-logind.service systemd-user-sessions.service rmnologin.service systemd-journal-flush.service dietsplash-quit.service systemd-timesyncd.service
-Requires=fusion-splicer-svc.service
+Requires=fusion-splicer-svc.service postgresql.service
 
 [Service]
 StandardOutput=journal+console

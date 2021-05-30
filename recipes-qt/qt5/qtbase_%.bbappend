@@ -7,5 +7,7 @@
 #}
 
 PACKAGECONFIG_append_fsref = " \
-	linuxfb accessibility sql-sqlite sql-psql no-opengl \
+	linuxfb \
+	libinput xkbcommon \
+	accessibility sql-sqlite sql-psql no-opengl \
 "

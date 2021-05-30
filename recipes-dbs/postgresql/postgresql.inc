@@ -21,6 +21,10 @@ HOMEPAGE = "http://www.postgresql.com"
 LICENSE = "BSD-0-Clause"
 DEPENDS = "libnsl2 zlib readline tzcode-native"
 
+BBCLASSEXTEND = "native"
+DEPENDS_class-native = "libnsl2-native zlib-native readline-native tzcode-native"
+PACKAGECONFIG_class-native = "uuid"
+
 ARM_INSTRUCTION_SET = "arm"
 
 SRC_URI = "http://ftp.postgresql.org/pub/source/v${PV}/${BP}.tar.bz2 \

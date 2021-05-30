@@ -21,6 +21,7 @@ DEPENDS = "qtbase \
            qtquickcontrols2 \
            qtwebsockets \
            qtsvg \
+           qtcharts \
            qtgraphicaleffects \
            qtvirtualkeyboard \
            qttools-native \
@@ -29,17 +30,21 @@ DEPENDS = "qtbase \
 RDEPENDS_${PN}-bin = " \
                   postgresql \
                   xlslib \
-                  qtbase qtbase-plugins qtsvg \
+                  qtbase qtbase-plugins \
                   qtdeclarative \
                   qtdeclarative-qmlplugins \
+                  qtsvg \
+                  qtsvg-plugins \
                   qtgraphicaleffects \
-                  qtvirtualkeyboard \
                   qtquickcontrols2-qmlplugins \
                   qtwebsockets \
-                  qtsvg-plugins \
                   qtwebsockets-qmlplugins \
-                  qtvirtualkeyboard-qmlplugins \
+                  qtvirtualkeyboard \
                   qtvirtualkeyboard-plugins \
+                  qtvirtualkeyboard-qmlplugins \
+                  qtcharts \
+                  qtcharts-plugins \
+                  qtcharts-qmlplugins \
                   source-han-sans-cn-fonts \
 "
 

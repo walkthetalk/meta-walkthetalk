@@ -16,6 +16,7 @@ IMAGE_INSTALL = "\
 	lrzsz \
 	cpufrequtils \
 	i2c-tools \
+	evtest \
 	mtd-utils \
 	strace \
 	sudo \

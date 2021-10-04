@@ -2,7 +2,7 @@ Index: linux/arch/arm/boot/dts/zynq-fsref.dts
 ===================================================================
 --- /dev/null
 +++ linux/arch/arm/boot/dts/zynq-fsref.dts
-@@ -0,0 +1,419 @@
+@@ -0,0 +1,430 @@
 +/*
 + * system-top.dts
 + * system.dts
@@ -120,11 +120,22 @@ Index: linux/arch/arm/boot/dts/zynq-fsref.dts
 +		reset-gpios = <&gpio0 8 GPIO_ACTIVE_LOW>;
 +	};
 +
++	gpio-poweroff {
++		compatible = "gpio-poweroff";
++		gpios = <&gpio0 12 GPIO_ACTIVE_HIGH>;
++	};
++
 +	gpio-keys {
 +		compatible = "gpio-keys";
 +		#address-cells = <1>;
 +		#size-cells = <0>;
 +		autorepeat;
++		power-button {
++			label = "key_power";
++			gpios = <&gpio0 13 GPIO_ACTIVE_LOW>;
++			linux,code = <KEY_POWER>;
++			gpio-key,wakeup;
++		};
 +		sw0 {
 +			label = "key_esc";
 +			gpios = <&gpio0 54 GPIO_ACTIVE_LOW>;
@@ -327,7 +338,7 @@ Index: linux/arch/arm/boot/dts/zynq-fsref.dts
 +	cts-override ;
 +	device_type = "serial";
 +	port-number = <1>;
-+	status = "okay";
++	status = "disabled";
 +};
 +&usb0 {
 +	status = "okay";
@@ -426,7 +437,7 @@ Index: linux/arch/arm/configs/fsref_defconfig
 ===================================================================
 --- /dev/null
 +++ linux/arch/arm/configs/fsref_defconfig
-@@ -0,0 +1,239 @@
+@@ -0,0 +1,241 @@
 +# CONFIG_SWAP is not set
 +CONFIG_SYSVIPC=y
 +CONFIG_NO_HZ=y
@@ -574,6 +585,8 @@ Index: linux/arch/arm/configs/fsref_defconfig
 +CONFIG_GPIO_SYSFS=y
 +CONFIG_GPIO_XILINX=y
 +CONFIG_GPIO_ZYNQ=y
++CONFIG_POWER_RESET=y
++CONFIG_POWER_RESET_GPIO=y
 +CONFIG_THERMAL=y
 +CONFIG_CPU_THERMAL=y
 +CONFIG_WATCHDOG=y

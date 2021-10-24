@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=6bc538ed5bd9a7fc9398086aedcd7e46"
 inherit kernel
 
 LINUX_VERSION_EXTENSION = "-optimus"
-LINUX_VERSION = "5.7.2"
+LINUX_VERSION = "5.14.12"
 
 PV = "${LINUX_VERSION}"
 PR = "1"
@@ -20,8 +20,8 @@ SRC_URI_append_fsref = " \
 	file://add_sys_file_for_load_bitstream.patch \
 "
 
-SRC_URI[md5sum] = "3aec12c426030b27553006ea515a91a1"
-SRC_URI[sha256sum] = "6065ae820e2d52a77a549ef97444c36adf7ab2969b294460256f028b4eed7909"
+SRC_URI[md5sum] = "a52286fe206a3f7664ca5a6c5995b9ed"
+SRC_URI[sha256sum] = "8d272679dc5285136bfe1f6d54548c7cf9f1ed8925c04b8bae149c8983eb5c37"
 
 S = "${WORKDIR}/linux-${LINUX_VERSION}"
 

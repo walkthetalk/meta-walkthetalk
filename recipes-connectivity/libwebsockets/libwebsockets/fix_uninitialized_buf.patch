@@ -1,0 +1,13 @@
+Index: git/lib/roles/http/server/server.c
+===================================================================
+--- git.orig/lib/roles/http/server/server.c
++++ git/lib/roles/http/server/server.c
+@@ -1909,7 +1909,7 @@ lws_confirm_host_header(struct lws *wsi)
+ 	struct lws_tokenize ts;
+ 	lws_tokenize_elem e;
+ 	int port = 80, n;
+-	char buf[128];
++	char buf[128] = {};
+ 
+ 	/*
+ 	 * this vhost wants us to validate what the

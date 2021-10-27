@@ -1,13 +1,13 @@
 SUMMARY = "Canonical libwebsockets.org websocket library"
 HOMEPAGE = "https://libwebsockets.org/"
-LICENSE = "MIT & Zlib & BSD-3-Clause"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=8c47b078124308a4e1354e8d59f606b7"
+LICENSE = "MIT & Zlib & BSD-3-Clause & Apache-2.0"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=c8bea43a2eb5d713c338819a0be07797"
 
 DEPENDS = "zlib"
 
 S = "${WORKDIR}/git"
-SRCREV = "736f0739ed8c75db0e29c7678b5a9194e957c347"
-SRC_URI = "${GITHUB_MIRROR}/warmcat/libwebsockets.git;protocol=https;branch=v4.1-stable"
+SRCREV = "8d605f0649ed1ab6d27a443c7688598ea21fdb75"
+SRC_URI = "${GITHUB_MIRROR}/warmcat/libwebsockets.git;protocol=${GITHUB_PROTOCOL};branch=v4.2-stable"
 
 UPSTREAM_CHECK_URI = "https://github.com/warmcat/${BPN}/releases"
 UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>\d+(\.\d+)+)"
@@ -31,13 +31,13 @@ EXTRA_OECMAKE += " \
 
 PACKAGES =+ "${PN}-testapps ${PN}-evlib-event ${PN}-evlib-uv ${PN}-evlib-ev"
 
-FILES_${PN}-testapps += "${datadir}/libwebsockets-test-server/* ${bindir}/libwebsockets-test-*"
-FILES_${PN}-evlib-event += "${libdir}/libwebsockets-evlib_event.so"
-FILES_${PN}-evlib-uv += "${libdir}/libwebsockets-evlib_uv.so"
-FILES_${PN}-evlib-ev += "${libdir}/libwebsockets-evlib_ev.so"
+FILES:${PN}-testapps += "${datadir}/libwebsockets-test-server/* ${bindir}/libwebsockets-test-*"
+FILES:${PN}-evlib-event += "${libdir}/libwebsockets-evlib_event.so"
+FILES:${PN}-evlib-uv += "${libdir}/libwebsockets-evlib_uv.so"
+FILES:${PN}-evlib-ev += "${libdir}/libwebsockets-evlib_ev.so"
 
-RDEPENDS_${PN} += " ${@bb.utils.contains('PACKAGECONFIG', 'libevent', '${PN}-evlib-event', '', d)}"
-RDEPENDS_${PN} += " ${@bb.utils.contains('PACKAGECONFIG', 'libuv', '${PN}-evlib-uv', '', d)}"
-RDEPENDS_${PN} += " ${@bb.utils.contains('PACKAGECONFIG', 'libev', '${PN}-evlib-ev', '', d)}"
+RDEPENDS:${PN} += " ${@bb.utils.contains('PACKAGECONFIG', 'libevent', '${PN}-evlib-event', '', d)}"
+RDEPENDS:${PN} += " ${@bb.utils.contains('PACKAGECONFIG', 'libuv', '${PN}-evlib-uv', '', d)}"
+RDEPENDS:${PN} += " ${@bb.utils.contains('PACKAGECONFIG', 'libev', '${PN}-evlib-ev', '', d)}"
 
-RDEPENDS_${PN}-dev += " ${@bb.utils.contains('PACKAGECONFIG', 'static', '${PN}-staticdev', '', d)}"
+RDEPENDS:${PN}-dev += " ${@bb.utils.contains('PACKAGECONFIG', 'static', '${PN}-staticdev', '', d)}"

@@ -7,6 +7,6 @@ BBFILES ?= ""
 
 BBLAYERS ?= " \
   ##COREBASE##/meta \
-  ##COREBASE##/../meta-qt5 \
+  ##COREBASE##/../meta-qt6 \
   ##COREBASE##/../meta-walkthetalk \
 "

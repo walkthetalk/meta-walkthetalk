@@ -1,0 +1,20 @@
+eBPF files are being included in system emulators, which is useless and
+also breaks compilation because ebpf/trace-events is only processed
+if a system emulator is included in the build.
+
+Resolves: https://gitlab.com/qemu-project/qemu/-/issues/566
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ ebpf/meson.build | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/ebpf/meson.build b/ebpf/meson.build
+index 9cd0635370..2dd0fd8948 100644
+--- a/ebpf/meson.build
++++ b/ebpf/meson.build
+@@ -1 +1 @@
+-common_ss.add(when: libbpf, if_true: files('ebpf_rss.c'), if_false: files('ebpf_rss-stub.c'))
++softmmu_ss.add(when: libbpf, if_true: files('ebpf_rss.c'), if_false: files('ebpf_rss-stub.c'))
+-- 
+2.31.1
+ 

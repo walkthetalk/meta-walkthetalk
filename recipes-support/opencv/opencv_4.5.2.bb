@@ -5,17 +5,18 @@ SECTION = "libs"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=3b83ef96387f14655fc854ddc3c6bd57"
 
-ARM_INSTRUCTION_SET_armv4 = "arm"
-ARM_INSTRUCTION_SET_armv5 = "arm"
+ARM_INSTRUCTION_SET:armv4 = "arm"
+ARM_INSTRUCTION_SET:armv5 = "arm"
 
 DEPENDS = "libtool swig-native bzip2 zlib glib-2.0 libwebp"
 
-SRCREV_opencv = "d5fd2f0155ffad366f9ac912dfd6d189a7a6a98e"
-SRCREV_contrib = "37315babf9984a5b6aa981644a20dd8df1a5ff02"
+SRCREV_opencv = "69357b1e88680658a07cffde7678a4d697469f03"
+SRCREV_contrib = "f5d7f6712d4ff229ba4f45cf79dfd11c557d56fd"
 SRCREV_ipp = "a56b6ac6f030c312b2dce17430eef13aed9af274"
 SRCREV_boostdesc = "34e4206aef44d50e6bbcd0ab06354b52e7466d26"
 SRCREV_vgg = "fccf7cd6a4b12079f73bbfb21745f9babcd4eb1d"
 SRCREV_face = "8afa57abc8229d611c4937165d20e2a2d9fc5a12"
+SRCREV_wechat-qrcode = "a8b69ccc738421293254aec5ddb38bd523503252"
 
 def ipp_filename(d):
     import re
@@ -43,15 +44,17 @@ SRC_URI = "${GITHUB_MIRROR}/opencv/opencv.git;protocol=${GITHUB_PROTOCOL};name=o
            ${GITHUB_MIRROR}/opencv/opencv_3rdparty.git;protocol=${GITHUB_PROTOCOL};branch=contrib_xfeatures2d_boostdesc_20161012;destsuffix=boostdesc;name=boostdesc \
            ${GITHUB_MIRROR}/opencv/opencv_3rdparty.git;protocol=${GITHUB_PROTOCOL};branch=contrib_xfeatures2d_vgg_20160317;destsuffix=vgg;name=vgg \
            ${GITHUB_MIRROR}/opencv/opencv_3rdparty.git;protocol=${GITHUB_PROTOCOL};branch=contrib_face_alignment_20170818;destsuffix=face;name=face \
+           ${GITHUB_MIRROR}/WeChatCV/opencv_3rdparty.git;protocol=${GITHUB_PROTOCOL};branch=wechat_qrcode;destsuffix=wechat_qrcode;name=wechat-qrcode \
            file://0001-3rdparty-ippicv-Use-pre-downloaded-ipp.patch \
            file://0003-To-fix-errors-as-following.patch \
            file://0001-Temporarliy-work-around-deprecated-ffmpeg-RAW-functi.patch \
            file://0001-Dont-use-isystem.patch \
            file://download.patch \
            file://0001-Make-ts-module-external.patch \
-           file://0001-samples-cmake-digits-needs-opencv_dnn-module-to-buil.patch \
+           file://0001-sfm-link-with-Glog_LIBS.patch;patchdir=../contrib \
+           file://0001-Use-the-one-argument-version-of-SetTotalBytesLimit.patch \
            "
-SRC_URI_append_riscv64 = " file://0001-Use-Os-to-compile-tinyxml2.cpp.patch;patchdir=../contrib"
+SRC_URI:append:riscv64 = " file://0001-Use-Os-to-compile-tinyxml2.cpp.patch;patchdir=../contrib"
 
 S = "${WORKDIR}/git"
 
@@ -78,6 +81,8 @@ do_unpack_extra() {
     cache xfeatures2d/boostdesc ${WORKDIR}/boostdesc/*.i
     cache xfeatures2d/vgg ${WORKDIR}/vgg/*.i
     cache data ${WORKDIR}/face/*.dat
+    cache wechat_qrcode ${WORKDIR}/wechat_qrcode/*.caffemodel
+    cache wechat_qrcode ${WORKDIR}/wechat_qrcode/*.prototxt
 }
 addtask unpack_extra after do_unpack before do_patch
 
@@ -96,11 +101,17 @@ EXTRA_OECMAKE = "-DOPENCV_EXTRA_MODULES_PATH=${WORKDIR}/contrib/modules \
     ${@bb.utils.contains("TARGET_CC_ARCH", "-msse4.1", "-DENABLE_SSE=1 -DENABLE_SSE2=1 -DENABLE_SSE3=1 -DENABLE_SSSE3=1 -DENABLE_SSE41=1", "", d)} \
     ${@bb.utils.contains("TARGET_CC_ARCH", "-msse4.2", "-DENABLE_SSE=1 -DENABLE_SSE2=1 -DENABLE_SSE3=1 -DENABLE_SSSE3=1 -DENABLE_SSE41=1 -DENABLE_SSE42=1", "", d)} \
 "
-EXTRA_OECMAKE_append_x86 = " -DX86=ON"
+EXTRA_OECMAKE:append:x86 = " -DX86=ON"
 
 PACKAGECONFIG ??= "gapi python3 eigen jpeg png tiff v4l libv4l gstreamer samples tbb gphoto2 \
     ${@bb.utils.contains("DISTRO_FEATURES", "x11", "gtk", "", d)} \
     ${@bb.utils.contains("LICENSE_FLAGS_WHITELIST", "commercial", "libav", "", d)}"
+
+# TBB does not build for powerpc so disable that package config
+PACKAGECONFIG:remove:powerpc = "tbb"
+# tbb now needs getcontect/setcontext which is not there for all arches on musl
+PACKAGECONFIG:remove:libc-musl:riscv64 = "tbb"
+PACKAGECONFIG:remove:libc-musl:riscv32 = "tbb"
 
 PACKAGECONFIG[gapi] = "-DWITH_ADE=ON -Dade_DIR=${STAGING_LIBDIR},-DWITH_ADE=OFF,ade"
 PACKAGECONFIG[amdblas] = "-DWITH_OPENCLAMDBLAS=ON,-DWITH_OPENCLAMDBLAS=OFF,libclamdblas,"
@@ -123,6 +134,7 @@ PACKAGECONFIG[python2] = "-DPYTHON2_NUMPY_INCLUDE_DIRS:PATH=${STAGING_LIBDIR}/${
 PACKAGECONFIG[python3] = "-DPYTHON3_NUMPY_INCLUDE_DIRS:PATH=${STAGING_LIBDIR}/${PYTHON_DIR}/site-packages/numpy/core/include,,python3-numpy,"
 PACKAGECONFIG[samples] = "-DBUILD_EXAMPLES=ON -DINSTALL_PYTHON_EXAMPLES=ON,-DBUILD_EXAMPLES=OFF,,"
 PACKAGECONFIG[tbb] = "-DWITH_TBB=ON,-DWITH_TBB=OFF,tbb,"
+PACKAGECONFIG[tests] = "-DBUILD_TESTS=ON,-DBUILD_TESTS=OFF,,"
 PACKAGECONFIG[text] = "-DBUILD_opencv_text=ON,-DBUILD_opencv_text=OFF,tesseract,"
 PACKAGECONFIG[tiff] = "-DWITH_TIFF=ON,-DWITH_TIFF=OFF,tiff,"
 PACKAGECONFIG[v4l] = "-DWITH_V4L=ON,-DWITH_V4L=OFF,v4l-utils,"
@@ -147,7 +159,7 @@ PACKAGES += "${@bb.utils.contains('PACKAGECONFIG', 'samples', '${PN}-samples', '
     ${@bb.utils.contains('PACKAGECONFIG', 'python3', 'python3-${BPN}', '', d)} \
     ${PN}-apps"
 
-python populate_packages_prepend () {
+python populate_packages:prepend () {
     cv_libdir = d.expand('${libdir}')
     do_split_packages(d, cv_libdir, '^lib(.*)\.so$', 'lib%s-dev', 'OpenCV %s development package', extra_depends='${PN}-dev', allow_links=True)
     do_split_packages(d, cv_libdir, '^lib(.*)\.la$', 'lib%s-dev', 'OpenCV %s development package', extra_depends='${PN}-dev')
@@ -156,63 +168,66 @@ python populate_packages_prepend () {
 
     pn = d.getVar('PN')
     metapkg =  pn + '-dev'
-    d.setVar('ALLOW_EMPTY_' + metapkg, "1")
+    d.setVar('ALLOW_EMPTY:' + metapkg, "1")
     blacklist = [ metapkg ]
     metapkg_rdepends = [ ]
     packages = d.getVar('PACKAGES').split()
     for pkg in packages[1:]:
         if not pkg in blacklist and not pkg in metapkg_rdepends and pkg.endswith('-dev'):
             metapkg_rdepends.append(pkg)
-    d.setVar('RRECOMMENDS_' + metapkg, ' '.join(metapkg_rdepends))
+    d.setVar('RRECOMMENDS:' + metapkg, ' '.join(metapkg_rdepends))
 
     metapkg =  pn
-    d.setVar('ALLOW_EMPTY_' + metapkg, "1")
+    d.setVar('ALLOW_EMPTY:' + metapkg, "1")
     blacklist = [ metapkg, "libopencv-ts" ]
     metapkg_rdepends = [ ]
     for pkg in packages[1:]:
         if not pkg in blacklist and not pkg in metapkg_rdepends and not pkg.endswith('-dev') and not pkg.endswith('-dbg') and not pkg.endswith('-doc') and not pkg.endswith('-locale') and not pkg.endswith('-staticdev'):
             metapkg_rdepends.append(pkg)
-    d.setVar('RDEPENDS_' + metapkg, ' '.join(metapkg_rdepends))
+    d.setVar('RDEPENDS:' + metapkg, ' '.join(metapkg_rdepends))
 }
 
 PACKAGES_DYNAMIC += "^libopencv-.*"
 
-FILES_${PN} = ""
-FILES_${PN}-dbg += "${datadir}/OpenCV/java/.debug/* ${datadir}/OpenCV/samples/bin/.debug/*"
-FILES_${PN}-dev = "${includedir} ${libdir}/pkgconfig  ${libdir}/cmake/opencv4/*.cmake"
-FILES_${PN}-staticdev += "${libdir}/opencv4/3rdparty/*.a"
-FILES_${PN}-apps = "${bindir}/* ${datadir}/opencv4 ${datadir}/licenses"
-FILES_${PN}-java = "${datadir}/OpenCV/java"
-FILES_${PN}-samples = "${datadir}/opencv4/samples/"
+FILES:${PN} = ""
+FILES:${PN}-dbg += "${datadir}/OpenCV/java/.debug/* ${datadir}/OpenCV/samples/bin/.debug/*"
+FILES:${PN}-dev = "${includedir} ${libdir}/pkgconfig  ${libdir}/cmake/opencv4/*.cmake"
+FILES:${PN}-staticdev += "${libdir}/opencv4/3rdparty/*.a"
+FILES:${PN}-apps = "${bindir}/* ${datadir}/opencv4 ${datadir}/licenses"
+FILES:${PN}-java = "${datadir}/OpenCV/java"
+FILES:${PN}-samples = "${datadir}/opencv4/samples/"
 
-INSANE_SKIP_${PN}-java = "libdir"
-INSANE_SKIP_${PN}-dbg = "libdir"
+INSANE_SKIP:${PN}-java = "libdir"
+INSANE_SKIP:${PN}-dbg = "libdir"
 
-ALLOW_EMPTY_${PN} = "1"
+ALLOW_EMPTY:${PN} = "1"
 
-SUMMARY_python-opencv = "Python bindings to opencv"
-FILES_python-opencv = "${PYTHON_SITEPACKAGES_DIR}/*"
-RDEPENDS_python-opencv = "python-core python-numpy"
+SUMMARY:python-opencv = "Python bindings to opencv"
+FILES:python-opencv = "${PYTHON_SITEPACKAGES_DIR}/*"
+RDEPENDS:python-opencv = "python-core python-numpy"
 
-SUMMARY_python3-opencv = "Python bindings to opencv"
-FILES_python3-opencv = "${PYTHON_SITEPACKAGES_DIR}/*"
-RDEPENDS_python3-opencv = "python3-core python3-numpy"
+SUMMARY:python3-opencv = "Python bindings to opencv"
+FILES:python3-opencv = "${PYTHON_SITEPACKAGES_DIR}/*"
+RDEPENDS:python3-opencv = "python3-core python3-numpy"
 
-RDEPENDS_${PN}-apps  = "bash"
+RDEPENDS:${PN}-apps  = "bash"
 
-do_compile_prepend() {
+do_compile:prepend() {
     # remove the build host info to improve reproducibility
     if [ -f ${WORKDIR}/build/modules/core/version_string.inc ]; then
         sed -i "s#${WORKDIR}#/workdir#g" ${WORKDIR}/build/modules/core/version_string.inc
     fi
 }
 
-do_install_append() {
+do_install:append() {
     # Move Python files into correct library folder (for multilib build)
     if [ "$libdir" != "/usr/lib" -a -d ${D}/usr/lib ]; then
         mv ${D}/usr/lib/* ${D}/${libdir}/
         rm -rf ${D}/usr/lib
     fi
+    # remove build host path to improve reproducibility
+    if [ -f ${D}${libdir}/cmake/opencv4/OpenCVModules.cmake ]; then
+        sed -e 's@${STAGING_DIR_HOST}@@g' \
+            -i ${D}${libdir}/cmake/opencv4/OpenCVModules.cmake
+    fi
 }
-
-TOOLCHAIN = "gcc"

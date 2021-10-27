@@ -8,10 +8,10 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/OFL-1.1;md5=fac3a519e5e9eb96316
 inherit allarch fontcache
 
 SRC_URI = " \
-    https://github.com/adobe-fonts/source-han-serif/releases/download/1.001R/SourceHanSerif.ttc \
+    https://github.com/adobe-fonts/source-han-serif/releases/download/${PV}R/SourceHanSerif.ttc.zip \
 "
-SRC_URI[md5sum] = "386dd14320f81ad42668d2f06aeef091"
-SRC_URI[sha256sum] = "85cc634fa228286ca307803bbb4ca61f61fa821b3ed573f4f07c6f0c064426b5"
+SRC_URI[md5sum] = "8bc3de9923ef9edbf531b55d6128cdfb"
+SRC_URI[sha256sum] = "443832c1a6fb8304fe6013bb175289bca3afd04ff7fbb662fe9425f940ec19c3"
 
 S = "${WORKDIR}"
 
@@ -20,7 +20,7 @@ do_install() {
     find ./ -name 'SourceHanSerif.ttc' -exec install -m 0644 {} ${D}${datadir}/fonts/truetype/ \;
 }
 
-FILES_${PN} = " \
+FILES:${PN} = " \
     ${datadir}/fonts \
 "
 

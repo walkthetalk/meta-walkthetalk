@@ -14,7 +14,7 @@ PR = "1"
 SRC_URI = "http://www.kernel.org/pub/linux/kernel/v5.x/linux-${LINUX_VERSION}.tar.xz \
 "
 
-SRC_URI_append_fsref = " \
+SRC_URI:append:fsref = " \
 	file://0001-simplefb-add-memory-region-support-for-device-tree.patch \
 	file://add_fsref.patch \
 	file://add_sys_file_for_load_bitstream.patch \
@@ -25,7 +25,7 @@ SRC_URI[sha256sum] = "8d272679dc5285136bfe1f6d54548c7cf9f1ed8925c04b8bae149c8983
 
 S = "${WORKDIR}/linux-${LINUX_VERSION}"
 
-do_configure_prepend() {
+do_configure:prepend() {
 	make O=${B} -C ${S} ${KERNEL_MACHINE}
 
 	echo "# Global settings from linux recipe" >> ${B}/.config

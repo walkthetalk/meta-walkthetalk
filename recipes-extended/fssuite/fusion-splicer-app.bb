@@ -3,31 +3,23 @@ SECTION = "product suite"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://README.md;md5=400cd81ffff8789915eea5992120606e"
 
-inherit qmake5
+inherit qt6-qmake systemd
 
-RPROVIDES_${PN} += "${PN}-systemd"
-RREPLACES_${PN} += "${PN}-systemd"
-RCONFLICTS_${PN} += "${PN}-systemd"
-SYSTEMD_SERVICE_${PN}-service = "${PN}.service"
-SYSTEMD_PACKAGES = "${PN}-service"
-
-inherit systemd
+SYSTEMD_SERVICE:${PN} = "${PN}.service"
 
 PV = "0.8"
 PR = "r1"
 SRCREV = "${AUTOREV}"
 DEPENDS = "qtbase \
            qtdeclarative \
-           qtquickcontrols2 \
            qtwebsockets \
            qtsvg \
            qtcharts \
-           qtgraphicaleffects \
            qtvirtualkeyboard \
            qttools-native \
            xlslib"
 
-RDEPENDS_${PN}-bin = " \
+RDEPENDS:${PN} = " \
                   postgresql \
                   xlslib \
                   qtbase qtbase-plugins \
@@ -35,8 +27,6 @@ RDEPENDS_${PN}-bin = " \
                   qtdeclarative-qmlplugins \
                   qtsvg \
                   qtsvg-plugins \
-                  qtgraphicaleffects \
-                  qtquickcontrols2-qmlplugins \
                   qtwebsockets \
                   qtwebsockets-qmlplugins \
                   qtvirtualkeyboard \
@@ -48,15 +38,10 @@ RDEPENDS_${PN}-bin = " \
                   source-han-sans-cn-fonts \
 "
 
-RDEPENDS_${PN}-service = " \
-		${PN}-bin \
+FILES:${PN} += "${datadir}/fusion-splicer-app \
+		${bindir} \
+		${datadir}/fonts/* \
 "
-
-PACKAGES =+ "${PN}-bin ${PN}-service"
-FILES_${PN}-bin = "${datadir}/fusion-splicer-app \
-		   ${bindir} \
-"
-FILES_${PN}-service = "${systemd_system_unitdir}"
 
 SRC_URI = " \
 	git:///mnt/datum/repositories/walkthetalk/fsref.app.git \
@@ -84,5 +69,3 @@ do_install() {
 	install -m 0644 ${S}/i18n/*.lang ${D}${datadir}/fusion-splicer-app/i18n
 	install -m 0644 ${S}/resources/qtquickcontrols2.conf ${D}${datadir}/fusion-splicer-app
 }
-
-FILES_${PN} += "${datadir}/fonts/*"

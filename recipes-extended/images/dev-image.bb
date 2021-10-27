@@ -1,4 +1,4 @@
-DESCRIPTION = "An image for fusion splicer that will launch into the QtE based Application"
+DESCRIPTION = "An image for fusion splicer that will launch into the Qt based Application"
 LICENSE = "MIT"
 
 PV = "1.0"
@@ -22,7 +22,7 @@ IMAGE_INSTALL = "\
 	sudo \
 	libwebsockets \
 "
-IMAGE_INSTALL_append += " \
+IMAGE_INSTALL += " \
 	postgresql \
 	postgresql-client \
 	postgresql-contrib \
@@ -35,9 +35,7 @@ IMAGE_INSTALL_append += " \
 	qtbase qtbase-plugins qtsvg \
 	qtdeclarative \
 	qtdeclarative-qmlplugins \
-	qtgraphicaleffects \
 	qtvirtualkeyboard \
-	qtquickcontrols2-qmlplugins \
 	qtwebsockets \
 	qtsvg-plugins \
 	qtwebsockets-qmlplugins \
@@ -48,12 +46,12 @@ IMAGE_INSTALL_append += " \
 "
 
 # NOTE: don't use machine specific append, or will result in missing files.
-IMAGE_INSTALL_append += " \
+IMAGE_INSTALL += " \
 	exttools \
 	haveged \
 	gsl \
-	fusion-splicer-svc-service \
-	fusion-splicer-app-service \
+	fusion-splicer-svc \
+	fusion-splicer-app \
 "
 
 inherit core-image

@@ -1,5 +1,5 @@
-SUMMARY = "Integrated Development Environment + qt5 support"
-DESCRIPTION = "Meta package for ensuring the build directory contains all appropriate toolchain packages for using an IDE & QTE"
+SUMMARY = "Integrated Development Environment + qt6 support"
+DESCRIPTION = "Meta package for ensuring the build directory contains all appropriate toolchain packages for using an IDE & Qt"
 LICENSE = "MIT"
 
 DEPENDS = "virtual/libc \
@@ -21,7 +21,6 @@ DEPENDS = "virtual/libc \
 	\
                   qtbase qtbase qtsvg \
                   qtdeclarative \
-                  qtgraphicaleffects \
                   qtvirtualkeyboard \
                   qtquickcontrols2 \
                   qtwebsockets \
@@ -34,13 +33,13 @@ DEPENDS = "virtual/libc \
 PR = "r1"
 RM_WORK_EXCLUDE += "${PN}"
 
-inherit meta toolchain-scripts nopackages
+inherit toolchain-scripts nopackages
 
-inherit qmake5_paths
+inherit qt6-qmake
 
 QT_TOOLS_PREFIX = "${STAGING_DIR_NATIVE}${OE_QMAKE_PATH_HOST_BINS}"
 
-toolchain_create_tree_env_script_append() {
+toolchain_create_tree_env_script:append() {
     #mv $script $script-qt5
     #script=$script-qt5
     #

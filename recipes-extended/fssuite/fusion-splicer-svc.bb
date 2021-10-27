@@ -3,28 +3,21 @@ SECTION = "fs suite"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
 
-inherit pkgconfig
+inherit pkgconfig systemd
 
-RPROVIDES_${PN} += "${PN}-systemd"
-RREPLACES_${PN} += "${PN}-systemd"
-RCONFLICTS_${PN} += "${PN}-systemd"
-SYSTEMD_SERVICE_${PN}-service = "${PN}.service"
-SYSTEMD_PACKAGES = "${PN}-service"
-inherit systemd
+SYSTEMD_SERVICE:${PN} = "${PN}.service"
 
 DEPENDS += " \
-	postgresql-native \
 	coreutils-native \
 	boost \
 	opencv \
 	gsl \
 	lua \
 	libwebsockets \
-	libpqxx \
 	xlslib \
 "
 
-RDEPENDS_${PN}-bin = " \
+RDEPENDS:${PN} = " \
 	postgresql \
 	libopencv-core \
 	libopencv-imgproc \
@@ -32,21 +25,14 @@ RDEPENDS_${PN}-bin = " \
 	lua \
 	libwebsockets \
 	libpng \
-	libpqxx \
 	xlslib \
 "
 
-RDEPENDS_${PN}-service = " \
-	${PN}-bin \
-"
-
-PACKAGES =+ "${PN}-bin ${PN}-service"
-FILES_${PN}-bin = " \
+FILES:${PN} += " \
 		   ${base_libdir}/firmware \
 		   ${datadir} \
 		   ${bindir} \
 "
-FILES_${PN}-service = "${systemd_system_unitdir}"
 
 SRCREV = "${AUTOREV}"
 SRC_URI = " \
@@ -80,7 +66,7 @@ do_install() {
 	install -m 0755 ${S}/scripts/initdb.sql ${D}${datadir}/${PN}
 }
 
-pkg_postinst_ontarget_${PN}-bin () {
+pkg_postinst_ontarget:${PN} () {
 	if test -x ${datadir}/${PN}/initdb.sh
 	then
 		${datadir}/${PN}/initdb.sh

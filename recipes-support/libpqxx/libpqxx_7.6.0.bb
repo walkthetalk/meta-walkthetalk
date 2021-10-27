@@ -1,9 +1,9 @@
 DESCRIPTION = "C++ client API for PostgreSQL"
 SECTION = "libs"
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://COPYING;md5=f8ef8e6ae44b3eda3f116eee3a64f236"
+LIC_FILES_CHKSUM = "file://COPYING;md5=fe6a87ebf0a117888ce73e60a1e46d18"
 
-PV = "7.0.7"
+PV = "7.6.0"
 PR = "r1"
 
 inherit autotools
@@ -34,19 +34,19 @@ EXTRA_OECONF = " \
 	--with-postgres-lib=${STAGING_DIR_HOST}/usr/lib \
 "
 
-FILES_${PN} = " \
-	${libdir}/libpqxx-7.0.so \
+FILES:${PN} = " \
+	${libdir}/libpqxx-7.6.so \
 	${bindir}/pqxx-config \
 "
 
-FILES_${PN}-dev = " \
+FILES:${PN}-dev = " \
 	${libdir}/libpqxx.so \
 	${libdir}/libpqxx.la \
 	${libdir}/pkgconfig/* \
 	${includedir} \
 "
 
-do_install_append() {
+do_install:append() {
 	sed -i 's|${STAGING_DIR_HOST}||' ${D}/usr/lib/pkgconfig/libpqxx.pc
 }
 

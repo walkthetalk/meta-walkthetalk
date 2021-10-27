@@ -1,7 +1,24 @@
-Index: u-boot/arch/arm/dts/zynq-fsref.dts
-===================================================================
+From 70fd5d20f6c47ae59d1fe6e84de6dc646ad00d36 Mon Sep 17 00:00:00 2001
+From: Yi Qingliang <niqingliang2003@gmail.com>
+Date: Tue, 1 Oct 2019 14:29:43 +0800
+Subject: [PATCH] compile uboot for fsref
+
+---
+ arch/arm/dts/zynq-fsref.dts                 |  188 ++++
+ board/xilinx/zynq/zynq-fsref/ps7_init_gpl.c | 1092 +++++++++++++++++++
+ board/xilinx/zynq/zynq-fsref/ps7_init_gpl.h |  129 +++
+ configs/zynq_fsref_defconfig                |   53 +
+ 4 files changed, 1462 insertions(+)
+ create mode 100644 arch/arm/dts/zynq-fsref.dts
+ create mode 100644 board/xilinx/zynq/zynq-fsref/ps7_init_gpl.c
+ create mode 100644 board/xilinx/zynq/zynq-fsref/ps7_init_gpl.h
+ create mode 100644 configs/zynq_fsref_defconfig
+
+diff --git a/arch/arm/dts/zynq-fsref.dts b/arch/arm/dts/zynq-fsref.dts
+new file mode 100644
+index 0000000000..c42b56749f
 --- /dev/null
-+++ u-boot/arch/arm/dts/zynq-fsref.dts
++++ b/arch/arm/dts/zynq-fsref.dts
 @@ -0,0 +1,188 @@
 +/*
 + * system-top.dts
@@ -191,10 +208,11 @@ Index: u-boot/arch/arm/dts/zynq-fsref.dts
 +	};
 +};
 +
-Index: u-boot/board/xilinx/zynq/zynq-fsref/ps7_init_gpl.c
-===================================================================
+diff --git a/board/xilinx/zynq/zynq-fsref/ps7_init_gpl.c b/board/xilinx/zynq/zynq-fsref/ps7_init_gpl.c
+new file mode 100644
+index 0000000000..5c8e489bf8
 --- /dev/null
-+++ u-boot/board/xilinx/zynq/zynq-fsref/ps7_init_gpl.c
++++ b/board/xilinx/zynq/zynq-fsref/ps7_init_gpl.c
 @@ -0,0 +1,1092 @@
 +/******************************************************************************
 +* (c) Copyright 2010-2018 Xilinx, Inc. All rights reserved.
@@ -1288,10 +1306,11 @@ Index: u-boot/board/xilinx/zynq/zynq-fsref/ps7_init_gpl.c
 +
 +
 +
-Index: u-boot/board/xilinx/zynq/zynq-fsref/ps7_init_gpl.h
-===================================================================
+diff --git a/board/xilinx/zynq/zynq-fsref/ps7_init_gpl.h b/board/xilinx/zynq/zynq-fsref/ps7_init_gpl.h
+new file mode 100644
+index 0000000000..cfdbc0b7ff
 --- /dev/null
-+++ u-boot/board/xilinx/zynq/zynq-fsref/ps7_init_gpl.h
++++ b/board/xilinx/zynq/zynq-fsref/ps7_init_gpl.h
 @@ -0,0 +1,129 @@
 +/******************************************************************************
 +*
@@ -1422,10 +1441,11 @@ Index: u-boot/board/xilinx/zynq/zynq-fsref/ps7_init_gpl.h
 +}
 +#endif
 +
-Index: u-boot/configs/zynq_fsref_defconfig
-===================================================================
+diff --git a/configs/zynq_fsref_defconfig b/configs/zynq_fsref_defconfig
+new file mode 100644
+index 0000000000..edd944a75e
 --- /dev/null
-+++ u-boot/configs/zynq_fsref_defconfig
++++ b/configs/zynq_fsref_defconfig
 @@ -0,0 +1,53 @@
 +CONFIG_ARM=y
 +CONFIG_SPL_SYS_DCACHE_OFF=y

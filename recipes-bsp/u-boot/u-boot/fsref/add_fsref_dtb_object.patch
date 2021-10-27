@@ -1,10 +1,19 @@
-Index: git/arch/arm/dts/Makefile
-===================================================================
---- git.orig/arch/arm/dts/Makefile
-+++ git/arch/arm/dts/Makefile
-@@ -236,6 +236,7 @@ dtb-$(CONFIG_ARCH_ZYNQ) += \
- 	zynq-zed.dtb \
+From 0a6fcce2b835ea8ddf2ae1e2a037f0c1aeeb272f Mon Sep 17 00:00:00 2001
+From: Yi Qingliang <niqingliang2003@gmail.com>
+Date: Tue, 1 Oct 2019 14:29:43 +0800
+Subject: [PATCH] compile uboot for fsref
+
+---
+ arch/arm/dts/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm/dts/Makefile b/arch/arm/dts/Makefile
+index 9fb38682e6..b9ea941a41 100644
+--- a/arch/arm/dts/Makefile
++++ b/arch/arm/dts/Makefile
+@@ -295,6 +295,7 @@ dtb-$(CONFIG_ARCH_ZYNQ) += \
  	zynq-zturn.dtb \
+ 	zynq-zturn-v5.dtb \
  	zynq-zybo.dtb \
 +	zynq-fsref.dtb \
  	zynq-zybo-z7.dtb

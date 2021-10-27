@@ -1,7 +1,24 @@
-Index: ax7021.PmXTL/arch/arm/dts/zynq-ax7021.dts
-===================================================================
+From 2c217468a44d3054d0e95d6fcbfec3745a72555b Mon Sep 17 00:00:00 2001
+From: Yi Qingliang <niqingliang2003@gmail.com>
+Date: Tue, 1 Oct 2019 14:29:43 +0800
+Subject: [PATCH] compile uboot for fsref
+
+---
+ arch/arm/dts/zynq-ax7021.dts                 |  189 +++
+ board/xilinx/zynq/zynq-ax7021/ps7_init_gpl.c | 1092 ++++++++++++++++++
+ board/xilinx/zynq/zynq-ax7021/ps7_init_gpl.h |  129 +++
+ configs/zynq_ax7021_defconfig                |   53 +
+ 4 files changed, 1463 insertions(+)
+ create mode 100644 arch/arm/dts/zynq-ax7021.dts
+ create mode 100644 board/xilinx/zynq/zynq-ax7021/ps7_init_gpl.c
+ create mode 100644 board/xilinx/zynq/zynq-ax7021/ps7_init_gpl.h
+ create mode 100644 configs/zynq_ax7021_defconfig
+
+diff --git a/arch/arm/dts/zynq-ax7021.dts b/arch/arm/dts/zynq-ax7021.dts
+new file mode 100644
+index 0000000000..6d4ef44b88
 --- /dev/null
-+++ ax7021.PmXTL/arch/arm/dts/zynq-ax7021.dts
++++ b/arch/arm/dts/zynq-ax7021.dts
 @@ -0,0 +1,189 @@
 +/*
 + * system-top.dts
@@ -192,10 +209,11 @@ Index: ax7021.PmXTL/arch/arm/dts/zynq-ax7021.dts
 +	};
 +};
 +
-Index: ax7021.PmXTL/board/xilinx/zynq/zynq-ax7021/ps7_init_gpl.c
-===================================================================
+diff --git a/board/xilinx/zynq/zynq-ax7021/ps7_init_gpl.c b/board/xilinx/zynq/zynq-ax7021/ps7_init_gpl.c
+new file mode 100644
+index 0000000000..b9184df865
 --- /dev/null
-+++ ax7021.PmXTL/board/xilinx/zynq/zynq-ax7021/ps7_init_gpl.c
++++ b/board/xilinx/zynq/zynq-ax7021/ps7_init_gpl.c
 @@ -0,0 +1,1092 @@
 +/******************************************************************************
 +* (c) Copyright 2010-2018 Xilinx, Inc. All rights reserved.
@@ -1289,10 +1307,11 @@ Index: ax7021.PmXTL/board/xilinx/zynq/zynq-ax7021/ps7_init_gpl.c
 +
 +
 +
-Index: ax7021.PmXTL/board/xilinx/zynq/zynq-ax7021/ps7_init_gpl.h
-===================================================================
+diff --git a/board/xilinx/zynq/zynq-ax7021/ps7_init_gpl.h b/board/xilinx/zynq/zynq-ax7021/ps7_init_gpl.h
+new file mode 100644
+index 0000000000..cfdbc0b7ff
 --- /dev/null
-+++ ax7021.PmXTL/board/xilinx/zynq/zynq-ax7021/ps7_init_gpl.h
++++ b/board/xilinx/zynq/zynq-ax7021/ps7_init_gpl.h
 @@ -0,0 +1,129 @@
 +/******************************************************************************
 +*
@@ -1423,10 +1442,11 @@ Index: ax7021.PmXTL/board/xilinx/zynq/zynq-ax7021/ps7_init_gpl.h
 +}
 +#endif
 +
-Index: ax7021.PmXTL/configs/zynq_ax7021_defconfig
-===================================================================
+diff --git a/configs/zynq_ax7021_defconfig b/configs/zynq_ax7021_defconfig
+new file mode 100644
+index 0000000000..0a9832e0eb
 --- /dev/null
-+++ ax7021.PmXTL/configs/zynq_ax7021_defconfig
++++ b/configs/zynq_ax7021_defconfig
 @@ -0,0 +1,53 @@
 +CONFIG_ARM=y
 +CONFIG_SPL_SYS_DCACHE_OFF=y

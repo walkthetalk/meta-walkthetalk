@@ -35,7 +35,7 @@ RDEPENDS:${PN} = " \
                   qtcharts \
                   qtcharts-plugins \
                   qtcharts-qmlplugins \
-                  source-han-sans-cn-fonts \
+                  source-han-sans-cn-fonts-medium \
 "
 
 FILES:${PN} += "${datadir}/fusion-splicer-app \

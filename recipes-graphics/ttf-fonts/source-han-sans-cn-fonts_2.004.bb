@@ -24,8 +24,33 @@ do_install() {
     find ./SubsetOTF/CN/ -name '*.otf' -exec install -m 0644 {} ${D}${datadir}/fonts/truetype/ \;
 }
 
+PACKAGES =+ "${PN}-bold \
+             ${PN}-extralight \
+             ${PN}-heavy \
+             ${PN}-light \
+             ${PN}-medium \
+             ${PN}-normal \
+             ${PN}-regular \
+"
+
+FILES:${PN}-bold       += "${datadir}/fonts/truetype/SourceHanSansCN-Bold.otf"
+FILES:${PN}-extralight += "${datadir}/fonts/truetype/SourceHanSansCN-ExtraLight.otf"
+FILES:${PN}-heavy      += "${datadir}/fonts/truetype/SourceHanSansCN-Heavy.otf"
+FILES:${PN}-light      += "${datadir}/fonts/truetype/SourceHanSansCN-Light.otf"
+FILES:${PN}-medium     += "${datadir}/fonts/truetype/SourceHanSansCN-Medium.otf"
+FILES:${PN}-normal     += "${datadir}/fonts/truetype/SourceHanSansCN-Normal.otf"
+FILES:${PN}-regular    += "${datadir}/fonts/truetype/SourceHanSansCN-Regular.otf"
+
 FILES:${PN} = " \
     ${sysconfdir}/fonts \
     ${datadir}/fonts \
+"
+RDEPENDS:${PN} += "${PN}-bold \
+             ${PN}-extralight \
+             ${PN}-heavy \
+             ${PN}-light \
+             ${PN}-medium \
+             ${PN}-normal \
+             ${PN}-regular \
 "
 

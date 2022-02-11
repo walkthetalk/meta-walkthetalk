@@ -51,17 +51,12 @@ do_install() {
 	install -d ${D}${bindir}
 	install -m 0755 ${B}/output/release/bin/fusion-splicer-svc ${D}${bindir}
 
-	install -d ${D}/${base_libdir}/firmware/
-	install -m 0755 ${WORKDIR}/system.bit.bin.tm043 ${D}/${base_libdir}/firmware/
-	install -m 0755 ${WORKDIR}/system.bit.bin.tm050 ${D}/${base_libdir}/firmware/
-
 	# service files
 	install -d ${D}${systemd_system_unitdir}
 	install -m 0644 ${WORKDIR}/${PN}.service ${D}${systemd_system_unitdir}
 
 	install -d ${D}${datadir}
 	install -d ${D}${datadir}/${PN}
-	install -m 0755 ${WORKDIR}/start_fs.sh ${D}${datadir}/${PN}
 	install -m 0755 ${S}/scripts/initdb.sh ${D}${datadir}/${PN}
 	install -m 0755 ${S}/scripts/initdb.sql ${D}${datadir}/${PN}
 }

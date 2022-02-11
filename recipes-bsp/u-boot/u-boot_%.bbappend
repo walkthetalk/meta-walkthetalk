@@ -2,6 +2,8 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/${BPN}:"
 
 HAS_PLATFORM_INIT:append:fsref = " zynq_fsref_defconfig"
 
+SRC_URI:append = " file://ensure_dma_for_spl_load_file.patch \
+		"
 SRC_URI:append:fsref = " file://add_fsref.patch \
 			 file://add_fsref_dtb_object.patch \
 			"

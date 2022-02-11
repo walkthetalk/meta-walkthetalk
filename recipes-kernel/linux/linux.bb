@@ -18,6 +18,7 @@ SRC_URI:append:fsref = " \
 	file://0001-simplefb-add-memory-region-support-for-device-tree.patch \
 	file://add_fsref.patch \
 	file://add_sys_file_for_load_bitstream.patch \
+	file://system.bit.bin.tm050 \
 "
 
 SRC_URI[md5sum] = "a52286fe206a3f7664ca5a6c5995b9ed"

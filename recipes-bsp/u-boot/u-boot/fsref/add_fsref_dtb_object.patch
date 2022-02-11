@@ -7,10 +7,10 @@ Subject: [PATCH] compile uboot for fsref
  arch/arm/dts/Makefile | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/dts/Makefile b/arch/arm/dts/Makefile
-index 9fb38682e6..b9ea941a41 100644
---- a/arch/arm/dts/Makefile
-+++ b/arch/arm/dts/Makefile
+Index: git/arch/arm/dts/Makefile
+===================================================================
+--- git.orig/arch/arm/dts/Makefile
++++ git/arch/arm/dts/Makefile
 @@ -295,6 +295,7 @@ dtb-$(CONFIG_ARCH_ZYNQ) += \
  	zynq-zturn.dtb \
  	zynq-zturn-v5.dtb \

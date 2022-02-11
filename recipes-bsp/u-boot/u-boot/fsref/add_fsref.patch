@@ -14,11 +14,10 @@ Subject: [PATCH] compile uboot for fsref
  create mode 100644 board/xilinx/zynq/zynq-fsref/ps7_init_gpl.h
  create mode 100644 configs/zynq_fsref_defconfig
 
-diff --git a/arch/arm/dts/zynq-fsref.dts b/arch/arm/dts/zynq-fsref.dts
-new file mode 100644
-index 0000000000..c42b56749f
+Index: git/arch/arm/dts/zynq-fsref.dts
+===================================================================
 --- /dev/null
-+++ b/arch/arm/dts/zynq-fsref.dts
++++ git/arch/arm/dts/zynq-fsref.dts
 @@ -0,0 +1,188 @@
 +/*
 + * system-top.dts
@@ -208,11 +207,10 @@ index 0000000000..c42b56749f
 +	};
 +};
 +
-diff --git a/board/xilinx/zynq/zynq-fsref/ps7_init_gpl.c b/board/xilinx/zynq/zynq-fsref/ps7_init_gpl.c
-new file mode 100644
-index 0000000000..5c8e489bf8
+Index: git/board/xilinx/zynq/zynq-fsref/ps7_init_gpl.c
+===================================================================
 --- /dev/null
-+++ b/board/xilinx/zynq/zynq-fsref/ps7_init_gpl.c
++++ git/board/xilinx/zynq/zynq-fsref/ps7_init_gpl.c
 @@ -0,0 +1,1092 @@
 +/******************************************************************************
 +* (c) Copyright 2010-2018 Xilinx, Inc. All rights reserved.
@@ -1306,11 +1304,10 @@ index 0000000000..5c8e489bf8
 +
 +
 +
-diff --git a/board/xilinx/zynq/zynq-fsref/ps7_init_gpl.h b/board/xilinx/zynq/zynq-fsref/ps7_init_gpl.h
-new file mode 100644
-index 0000000000..cfdbc0b7ff
+Index: git/board/xilinx/zynq/zynq-fsref/ps7_init_gpl.h
+===================================================================
 --- /dev/null
-+++ b/board/xilinx/zynq/zynq-fsref/ps7_init_gpl.h
++++ git/board/xilinx/zynq/zynq-fsref/ps7_init_gpl.h
 @@ -0,0 +1,129 @@
 +/******************************************************************************
 +*
@@ -1441,12 +1438,11 @@ index 0000000000..cfdbc0b7ff
 +}
 +#endif
 +
-diff --git a/configs/zynq_fsref_defconfig b/configs/zynq_fsref_defconfig
-new file mode 100644
-index 0000000000..edd944a75e
+Index: git/configs/zynq_fsref_defconfig
+===================================================================
 --- /dev/null
-+++ b/configs/zynq_fsref_defconfig
-@@ -0,0 +1,53 @@
++++ git/configs/zynq_fsref_defconfig
+@@ -0,0 +1,59 @@
 +CONFIG_ARM=y
 +CONFIG_SPL_SYS_DCACHE_OFF=y
 +CONFIG_ARCH_ZYNQ=y
@@ -1458,6 +1454,12 @@ index 0000000000..edd944a75e
 +CONFIG_SYS_LDSCRIPT="arch/arm/mach-zynq/u-boot.lds"
 +CONFIG_SPL_STACK_R=y
 +CONFIG_SPL_OS_BOOT=y
++CONFIG_SPL_DMA=y
++CONFIG_SPL_FPGA=y
++CONFIG_FIT=y
++CONFIG_SPL_FIT=y
++CONFIG_SPL_LOAD_FIT=y
++# CONFIG_SPL_LOAD_FIT_FULL=y
 +CONFIG_SYS_PROMPT="fsref> "
 +CONFIG_CMD_THOR_DOWNLOAD=y
 +CONFIG_CMD_DFU=y

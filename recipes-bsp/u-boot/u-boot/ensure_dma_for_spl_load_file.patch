@@ -1,0 +1,13 @@
+Index: git/common/spl/spl_fit.c
+===================================================================
+--- git.orig/common/spl/spl_fit.c
++++ git/common/spl/spl_fit.c
+@@ -528,7 +528,7 @@ static void *spl_get_fit_load_buffer(siz
+ {
+ 	void *buf;
+ 
+-	buf = malloc(size);
++	buf = memalign(ARCH_DMA_MINALIGN, size);
+ 	if (!buf) {
+ 		pr_err("Could not get FIT buffer of %lu bytes\n", (ulong)size);
+ 		pr_err("\tcheck CONFIG_SYS_SPL_MALLOC_SIZE\n");

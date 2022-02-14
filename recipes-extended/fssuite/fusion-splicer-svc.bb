@@ -15,6 +15,7 @@ DEPENDS += " \
 	lua \
 	libwebsockets \
 	xlslib \
+	fmt \
 "
 
 RDEPENDS:${PN} = " \
@@ -26,6 +27,7 @@ RDEPENDS:${PN} = " \
 	libwebsockets \
 	libpng \
 	xlslib \
+	fmt \
 "
 
 FILES:${PN} += " \
@@ -38,9 +40,6 @@ SRCREV = "${AUTOREV}"
 SRC_URI = " \
 	git:///mnt/datum/repositories/walkthetalk/fsref.svc.git \
 	file://${BPN}.service \
-	file://start_fs.sh \
-	file://system.bit.bin.tm043 \
-	file://system.bit.bin.tm050 \
 "
 
 S = "${WORKDIR}/git"

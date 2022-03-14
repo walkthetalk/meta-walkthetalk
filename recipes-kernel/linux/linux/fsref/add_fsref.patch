@@ -2,7 +2,7 @@ Index: linux/arch/arm/boot/dts/zynq-fsref.dts
 ===================================================================
 --- /dev/null
 +++ linux/arch/arm/boot/dts/zynq-fsref.dts
-@@ -0,0 +1,455 @@
+@@ -0,0 +1,471 @@
 +/*
 + * system-top.dts
 + * system.dts
@@ -410,6 +410,22 @@ Index: linux/arch/arm/boot/dts/zynq-fsref.dts
 +	hp203n@77 {
 +		compatible = "hp206c";
 +		reg = <0x77>;
++	};
++};
++
++&adc {
++	xlnx,channels {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		channel@0 {
++			reg = <0>;
++		};
++		channel@1 {
++			reg = <1>;
++		};
++		channel@2 {
++			reg = <2>;
++		};
 +	};
 +};
 +

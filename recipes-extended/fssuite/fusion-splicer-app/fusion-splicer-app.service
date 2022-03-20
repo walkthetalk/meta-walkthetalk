@@ -1,6 +1,6 @@
 [Unit]
 Description=Fusion Splicer Application
-Conflicts=getty@tty1.service systemd-logind.service systemd-user-sessions.service rmnologin.service systemd-journal-flush.service dietsplash-quit.service systemd-timesyncd.service
+Conflicts=getty@tty1.service dietsplash-quit.service
 Requires=fusion-splicer-svc.service postgresql.service
 
 [Service]

@@ -10,8 +10,8 @@ ARM_INSTRUCTION_SET:armv5 = "arm"
 
 DEPENDS = "libtool swig-native bzip2 zlib glib-2.0 libwebp"
 
-SRCREV_opencv = "69357b1e88680658a07cffde7678a4d697469f03"
-SRCREV_contrib = "f5d7f6712d4ff229ba4f45cf79dfd11c557d56fd"
+SRCREV_opencv = "dad26339a975b49cfb6c7dbe4bd5276c9dcb36e2"
+SRCREV_contrib = "49e8f123ca08e76891856a1ecce491b62d08ba20"
 SRCREV_ipp = "a56b6ac6f030c312b2dce17430eef13aed9af274"
 SRCREV_boostdesc = "34e4206aef44d50e6bbcd0ab06354b52e7466d26"
 SRCREV_vgg = "fccf7cd6a4b12079f73bbfb21745f9babcd4eb1d"
@@ -38,21 +38,20 @@ IPP_FILENAME = "${@ipp_filename(d)}"
 IPP_MD5 = "${@ipp_md5sum(d)}"
 
 SRCREV_FORMAT = "opencv_contrib_ipp_boostdesc_vgg"
-SRC_URI = "${GITHUB_MIRROR}/opencv/opencv.git;protocol=${GITHUB_PROTOCOL};name=opencv \
-           ${GITHUB_MIRROR}/opencv/opencv_contrib.git;protocol=${GITHUB_PROTOCOL};destsuffix=contrib;name=contrib \
-           ${GITHUB_MIRROR}/opencv/opencv_3rdparty.git;protocol=${GITHUB_PROTOCOL};branch=ippicv/master_20191018;destsuffix=ipp;name=ipp \
-           ${GITHUB_MIRROR}/opencv/opencv_3rdparty.git;protocol=${GITHUB_PROTOCOL};branch=contrib_xfeatures2d_boostdesc_20161012;destsuffix=boostdesc;name=boostdesc \
-           ${GITHUB_MIRROR}/opencv/opencv_3rdparty.git;protocol=${GITHUB_PROTOCOL};branch=contrib_xfeatures2d_vgg_20160317;destsuffix=vgg;name=vgg \
-           ${GITHUB_MIRROR}/opencv/opencv_3rdparty.git;protocol=${GITHUB_PROTOCOL};branch=contrib_face_alignment_20170818;destsuffix=face;name=face \
-           ${GITHUB_MIRROR}/WeChatCV/opencv_3rdparty.git;protocol=${GITHUB_PROTOCOL};branch=wechat_qrcode;destsuffix=wechat_qrcode;name=wechat-qrcode \
+SRC_URI = "git://github.com/opencv/opencv.git;name=opencv;branch=master;protocol=https \
+           git://github.com/opencv/opencv_contrib.git;destsuffix=contrib;name=contrib;branch=master;protocol=https \
+           git://github.com/opencv/opencv_3rdparty.git;branch=ippicv/master_20191018;destsuffix=ipp;name=ipp;protocol=https \
+           git://github.com/opencv/opencv_3rdparty.git;branch=contrib_xfeatures2d_boostdesc_20161012;destsuffix=boostdesc;name=boostdesc;protocol=https \
+           git://github.com/opencv/opencv_3rdparty.git;branch=contrib_xfeatures2d_vgg_20160317;destsuffix=vgg;name=vgg;protocol=https \
+           git://github.com/opencv/opencv_3rdparty.git;branch=contrib_face_alignment_20170818;destsuffix=face;name=face;protocol=https \
+           git://github.com/WeChatCV/opencv_3rdparty.git;branch=wechat_qrcode;destsuffix=wechat_qrcode;name=wechat-qrcode;protocol=https \
            file://0001-3rdparty-ippicv-Use-pre-downloaded-ipp.patch \
            file://0003-To-fix-errors-as-following.patch \
            file://0001-Temporarliy-work-around-deprecated-ffmpeg-RAW-functi.patch \
            file://0001-Dont-use-isystem.patch \
            file://download.patch \
            file://0001-Make-ts-module-external.patch \
-           file://0001-sfm-link-with-Glog_LIBS.patch;patchdir=../contrib \
-           file://0001-Use-the-one-argument-version-of-SetTotalBytesLimit.patch \
+           file://0001-core-vsx-update-vec_absd-workaround-condition.patch \
            "
 SRC_URI:append:riscv64 = " file://0001-Use-Os-to-compile-tinyxml2.cpp.patch;patchdir=../contrib"
 
@@ -102,10 +101,13 @@ EXTRA_OECMAKE = "-DOPENCV_EXTRA_MODULES_PATH=${WORKDIR}/contrib/modules \
     ${@bb.utils.contains("TARGET_CC_ARCH", "-msse4.2", "-DENABLE_SSE=1 -DENABLE_SSE2=1 -DENABLE_SSE3=1 -DENABLE_SSSE3=1 -DENABLE_SSE41=1 -DENABLE_SSE42=1", "", d)} \
 "
 EXTRA_OECMAKE:append:x86 = " -DX86=ON"
+# disable sse4.1 and sse4.2 to fix 32bit build failure
+# https://github.com/opencv/opencv/issues/21597
+EXTRA_OECMAKE:remove:x86 = " -DENABLE_SSE41=1 -DENABLE_SSE42=1"
 
 PACKAGECONFIG ??= "gapi python3 eigen jpeg png tiff v4l libv4l gstreamer samples tbb gphoto2 \
     ${@bb.utils.contains("DISTRO_FEATURES", "x11", "gtk", "", d)} \
-    ${@bb.utils.contains("LICENSE_FLAGS_WHITELIST", "commercial", "libav", "", d)}"
+    "
 
 # TBB does not build for powerpc so disable that package config
 PACKAGECONFIG:remove:powerpc = "tbb"
@@ -141,7 +143,7 @@ PACKAGECONFIG[v4l] = "-DWITH_V4L=ON,-DWITH_V4L=OFF,v4l-utils,"
 
 inherit pkgconfig cmake
 
-inherit ${@bb.utils.contains('PACKAGECONFIG', 'python3', 'distutils3-base', '', d)}
+inherit ${@bb.utils.contains('PACKAGECONFIG', 'python3', 'setuptools3-base', '', d)}
 inherit ${@bb.utils.contains('PACKAGECONFIG', 'python2', 'distutils-base', '', d)}
 
 export PYTHON_CSPEC="-I${STAGING_INCDIR}/${PYTHON_DIR}"
@@ -161,10 +163,10 @@ PACKAGES += "${@bb.utils.contains('PACKAGECONFIG', 'samples', '${PN}-samples', '
 
 python populate_packages:prepend () {
     cv_libdir = d.expand('${libdir}')
-    do_split_packages(d, cv_libdir, '^lib(.*)\.so$', 'lib%s-dev', 'OpenCV %s development package', extra_depends='${PN}-dev', allow_links=True)
-    do_split_packages(d, cv_libdir, '^lib(.*)\.la$', 'lib%s-dev', 'OpenCV %s development package', extra_depends='${PN}-dev')
-    do_split_packages(d, cv_libdir, '^lib(.*)\.a$', 'lib%s-dev', 'OpenCV %s development package', extra_depends='${PN}-dev')
-    do_split_packages(d, cv_libdir, '^lib(.*)\.so\.*', 'lib%s', 'OpenCV %s library', extra_depends='', allow_links=True)
+    do_split_packages(d, cv_libdir, r'^lib(.*)\.so$', 'lib%s-dev', 'OpenCV %s development package', extra_depends='${PN}-dev', allow_links=True)
+    do_split_packages(d, cv_libdir, r'^lib(.*)\.la$', 'lib%s-dev', 'OpenCV %s development package', extra_depends='${PN}-dev')
+    do_split_packages(d, cv_libdir, r'^lib(.*)\.a$', 'lib%s-dev', 'OpenCV %s development package', extra_depends='${PN}-dev')
+    do_split_packages(d, cv_libdir, r'^lib(.*)\.so\.*', 'lib%s', 'OpenCV %s library', extra_depends='', allow_links=True)
 
     pn = d.getVar('PN')
     metapkg =  pn + '-dev'
@@ -229,5 +231,9 @@ do_install:append() {
     if [ -f ${D}${libdir}/cmake/opencv4/OpenCVModules.cmake ]; then
         sed -e 's@${STAGING_DIR_HOST}@@g' \
             -i ${D}${libdir}/cmake/opencv4/OpenCVModules.cmake
+    fi
+    # remove setup_vars_opencv4.sh as its content is confusing and useless
+    if [ -f ${D}${bindir}/setup_vars_opencv4.sh ]; then
+        rm -rf ${D}${bindir}/setup_vars_opencv4.sh
     fi
 }

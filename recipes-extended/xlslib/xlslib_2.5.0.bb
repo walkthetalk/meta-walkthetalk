@@ -1,6 +1,6 @@
 SUMMARY = "A C/C++ multi-platform library for dynamically generating Excel(TM) files"
 HOMEPAGE = "http://xlslib.sourceforge.net"
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://${COREBASE}/meta/files/common-licenses/GPL-2.0-only;md5=801f80980d171dd6425610833a22dbe6"
 
 SRC_URI = "https://sourceforge.net/projects/xlslib/files/${BPN}-package-${PV}.zip \

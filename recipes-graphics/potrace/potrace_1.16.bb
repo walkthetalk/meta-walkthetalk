@@ -3,8 +3,6 @@ SECTION = "software platform"
 LICENSE = "GPL-2.0"
 LIC_FILES_CHKSUM = "file://COPYING;md5=6ccdcb5472e5e7e8061f4128ef20e049"
 
-PV = "1.16"
-
 DEPENDS = "zlib"
 RDEPENDS_${PN} = "zlib"
 

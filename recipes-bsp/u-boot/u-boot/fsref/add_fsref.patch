@@ -1,24 +1,8 @@
-From 70fd5d20f6c47ae59d1fe6e84de6dc646ad00d36 Mon Sep 17 00:00:00 2001
-From: Yi Qingliang <niqingliang2003@gmail.com>
-Date: Tue, 1 Oct 2019 14:29:43 +0800
-Subject: [PATCH] compile uboot for fsref
-
----
- arch/arm/dts/zynq-fsref.dts                 |  188 ++++
- board/xilinx/zynq/zynq-fsref/ps7_init_gpl.c | 1092 +++++++++++++++++++
- board/xilinx/zynq/zynq-fsref/ps7_init_gpl.h |  129 +++
- configs/zynq_fsref_defconfig                |   53 +
- 4 files changed, 1462 insertions(+)
- create mode 100644 arch/arm/dts/zynq-fsref.dts
- create mode 100644 board/xilinx/zynq/zynq-fsref/ps7_init_gpl.c
- create mode 100644 board/xilinx/zynq/zynq-fsref/ps7_init_gpl.h
- create mode 100644 configs/zynq_fsref_defconfig
-
-Index: git/arch/arm/dts/zynq-fsref.dts
+Index: u-boot/arch/arm/dts/zynq-fsref.dts
 ===================================================================
 --- /dev/null
-+++ git/arch/arm/dts/zynq-fsref.dts
-@@ -0,0 +1,188 @@
++++ u-boot/arch/arm/dts/zynq-fsref.dts
+@@ -0,0 +1,303 @@
 +/*
 + * system-top.dts
 + * system.dts
@@ -27,10 +11,15 @@ Index: git/arch/arm/dts/zynq-fsref.dts
 + */
 +
 +/dts-v1/;
-+/include/ "zynq-7000.dtsi"
++#include "zynq-7000.dtsi"
++#include <dt-bindings/gpio/gpio.h>
++
 +/ {
++	model = "walkthetalk,fsref";
++	compatible = "xlnx,zynq-7000";
++
 +	chosen {
-+		bootargs = "earlycon uio_pdrv_genirq.of_id=generic-uio";
++		bootargs = "earlycon uio_pdrv_genirq.of_id=generic-uio root=/dev/mmcblk0p2 rw rootfstype=ext4 rootwait";
 +		stdout-path = "serial0:115200n8";
 +	};
 +	aliases {
@@ -41,7 +30,7 @@ Index: git/arch/arm/dts/zynq-fsref.dts
 +		mmc0 = &sdhci0;
 +		mmc1 = &sdhci1;
 +	};
-+	memory {
++	memory@0 {
 +		device_type = "memory";
 +		reg = <0x0 0x40000000>;
 +	};
@@ -57,54 +46,54 @@ Index: git/arch/arm/dts/zynq-fsref.dts
 +		#size-cells = <1>;
 +		ranges;
 +
-+		fb0mem: buffer@3FF00000 {
++		fb0mem: buffer@3F000000 {
 +			no-map;
-+			reg = <0x3FF00000 0x80000>;
++			reg = <0x3F000000 0x800000>;
 +		};
 +
-+		fb1mem: buffer@3FF80000 {
++		fb1mem: buffer@3F800000 {
 +			no-map;
-+			reg = <0x3FF80000 0x80000>;
++			reg = <0x3F800000 0x800000>;
 +		};
 +
-+		cmos0mem0: buffer@3F000000 {
++		cmos0mem0: buffer@3B000000 {
 +			no-map;
-+			reg = <0x3F000000 0x100000>;
++			reg = <0x3B000000 0x800000>;
 +		};
 +
-+		cmos0mem1: buffer@3F100000 {
++		cmos0mem1: buffer@3B800000 {
 +			no-map;
-+			reg = <0x3F100000 0x100000>;
++			reg = <0x3B800000 0x800000>;
 +		};
 +
-+		cmos0mem2: buffer@3F200000 {
++		cmos0mem2: buffer@3C000000 {
 +			no-map;
-+			reg = <0x3F200000 0x100000>;
++			reg = <0x3C000000 0x800000>;
 +		};
 +
-+		cmos0mem3: buffer@3F300000 {
++		cmos0mem3: buffer@3C800000 {
 +			no-map;
-+			reg = <0x3F300000 0x100000>;
++			reg = <0x3C800000 0x800000>;
 +		};
 +
-+		cmos1mem0: buffer@3F400000 {
++		cmos1mem0: buffer@3D000000 {
 +			no-map;
-+			reg = <0x3F400000 0x100000>;
++			reg = <0x3D000000 0x800000>;
 +		};
 +
-+		cmos1mem1: buffer@3F500000 {
++		cmos1mem1: buffer@3D800000 {
 +			no-map;
-+			reg = <0x3F500000 0x100000>;
++			reg = <0x3D800000 0x800000>;
 +		};
 +
-+		cmos1mem2: buffer@3F600000 {
++		cmos1mem2: buffer@3E000000 {
 +			no-map;
-+			reg = <0x3F600000 0x100000>;
++			reg = <0x3E000000 0x800000>;
 +		};
 +
-+		cmos1mem3: buffer@3F700000 {
++		cmos1mem3: buffer@3E800000 {
 +			no-map;
-+			reg = <0x3F700000 0x100000>;
++			reg = <0x3E800000 0x800000>;
 +		};
 +	};
 +
@@ -114,14 +103,84 @@ Index: git/arch/arm/dts/zynq-fsref.dts
 +		interrupts = < 0 29 0x4 >;
 +		interrupt-parent = <&intc>;
 +	};
++
++	usb_phy0: phy0 {
++		compatible = "usb-nop-xceiv";
++		#phy-cells = <0>;
++		reset-gpios = <&gpio0 8 GPIO_ACTIVE_LOW>;
++	};
++};
++
++
++&amba {
++	ocmc: ocmc@f800c000 {
++		compatible = "xlnx,zynq-ocmc-1.0";
++		interrupt-parent = <&intc>;
++		interrupts = <0 3 4>;
++		reg = <0xf800c000 0x1000>;
++	};
++
++	qspi: spi@e000d000 {
++		clock-names = "ref_clk", "pclk";
++		clocks = <&clkc 10>, <&clkc 43>;
++		compatible = "xlnx,zynq-qspi-1.0";
++		status = "disabled";
++		interrupt-parent = <&intc>;
++		interrupts = <0 19 4>;
++		reg = <0xe000d000 0x1000>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++	};
++
++	smcc: memory-controller@e000e000 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		status = "disabled";
++		clock-names = "memclk", "apb_pclk";
++		clocks = <&clkc 11>, <&clkc 44>;
++		compatible = "arm,pl353-smc-r2p1", "arm,primecell";
++		interrupt-parent = <&intc>;
++		interrupts = <0 18 4>;
++		ranges ;
++		reg = <0xe000e000 0x1000>;
++		nand0: flash@e1000000 {
++			status = "disabled";
++			compatible = "arm,pl353-nand-r2p1";
++			reg = <0xe1000000 0x1000000>;
++			#address-cells = <0x1>;
++			#size-cells = <0x1>;
++		};
++		nor0: flash@e2000000 {
++			status = "disabled";
++			compatible = "cfi-flash";
++			reg = <0xe2000000 0x2000000>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++		};
++	};
++
++	efuse: efuse@f800d000 {
++		compatible = "xlnx,zynq-efuse";
++		reg = <0xf800d000 0x20>;
++	};
++};
++
++&devcfg {
++	clocks = <&clkc 12>, <&clkc 15>, <&clkc 16>, <&clkc 17>, <&clkc 18>;
++	clock-names = "ref_clk", "fclk0", "fclk1", "fclk2", "fclk3";
 +};
 +
 +&gem0 {
 +	local-mac-address = [00 0a 35 00 00 00];
-+	enet-reset = <&gpio0 7 0>;
 +	phy-mode = "rgmii-id";
 +	status = "okay";
-+	xlnx,ptp-enet-clock = <0x69f6bcb>;
++
++	phy-handle = <&ethernet_phy>;
++	ethernet_phy: ethernet-phy@1 {
++		reg = <1>;
++		device_type = "ethernet-phy";
++		reset-gpios = <&gpio0 7 GPIO_ACTIVE_LOW>;
++	};
 +};
 +&gpio0 {
 +	emio-gpio-width = <64>;
@@ -171,49 +230,89 @@ Index: git/arch/arm/dts/zynq-fsref.dts
 +&usb0 {
 +	phy_type = "ulpi";
 +	status = "okay";
++	dr_mode = "host";
++	usb-phy = <&usb_phy0>;
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usb0_default>;
 +};
++
++&pinctrl0 {
++	pinctrl_usb0_default: usb0-default {
++		mux {
++			groups = "usb0_0_grp";
++			function = "usb0";
++		};
++
++		conf {
++			groups = "usb0_0_grp";
++			slew-rate = <0>;
++			io-standard = <1>;
++		};
++
++		conf-rx {
++			pins = "MIO29", "MIO31", "MIO36";
++			bias-high-impedance;
++		};
++
++		conf-tx {
++			pins = "MIO28", "MIO30", "MIO32", "MIO33", "MIO34",
++			       "MIO35", "MIO37", "MIO38", "MIO39";
++			bias-disable;
++		};
++	};
++};
++
 +&clkc {
 +	fclk-enable = <0xf>;
 +	ps-clk-frequency = <33333333>;
++};
++
++&i2c0 {
++	status = "okay";
++};
++
++&i2c1 {
++	status = "okay";
 +};
 +
 +&amba {
 +	framebuffer0 {
 +		compatible = "simple-framebuffer";
 +		memory-region = <&fb0mem>;
-+		width = <320>;
-+		height = <240>;
-+		stride = <(320 * 4)>;
++		width = <800>;
++		height = <480>;
++		stride = <(800 * 4)>;
 +		format = "a8r8g8b8";
 +		clocks = <&clkc 15>, <&clkc 16>, <&clkc 17>, <&clkc 18>;
 +	};
 +	framebuffer1 {
 +		compatible = "simple-framebuffer";
 +		memory-region = <&cmos0mem0>;
-+		width = <320>;
-+		height = <240>;
-+		stride = <(320 * 4)>;
++		width = <800>;
++		height = <480>;
++		stride = <(800 * 4)>;
 +		format = "a8r8g8b8";
 +		clocks = <&clkc 15>, <&clkc 16>, <&clkc 17>, <&clkc 18>;
 +	};
 +	framebuffer2 {
 +		compatible = "simple-framebuffer";
 +		memory-region = <&cmos1mem0>;
-+		width = <320>;
-+		height = <240>;
-+		stride = <(320 * 4)>;
++		width = <800>;
++		height = <480>;
++		stride = <(800 * 4)>;
 +		format = "a8r8g8b8";
 +		clocks = <&clkc 15>, <&clkc 16>, <&clkc 17>, <&clkc 18>;
 +	};
 +};
 +
-Index: git/board/xilinx/zynq/zynq-fsref/ps7_init_gpl.c
+Index: u-boot/board/xilinx/zynq/zynq-fsref/ps7_init_gpl.c
 ===================================================================
 --- /dev/null
-+++ git/board/xilinx/zynq/zynq-fsref/ps7_init_gpl.c
++++ u-boot/board/xilinx/zynq/zynq-fsref/ps7_init_gpl.c
 @@ -0,0 +1,1092 @@
 +/******************************************************************************
-+* (c) Copyright 2010-2018 Xilinx, Inc. All rights reserved.
++* Copyright (C) 2010-2019 <Xilinx Inc.>
 +*
 +*  This program is free software; you can redistribute it and/or modify
 +*  it under the terms of the GNU General Public License as published by
@@ -1304,14 +1403,14 @@ Index: git/board/xilinx/zynq/zynq-fsref/ps7_init_gpl.c
 +
 +
 +
-Index: git/board/xilinx/zynq/zynq-fsref/ps7_init_gpl.h
+Index: u-boot/board/xilinx/zynq/zynq-fsref/ps7_init_gpl.h
 ===================================================================
 --- /dev/null
-+++ git/board/xilinx/zynq/zynq-fsref/ps7_init_gpl.h
++++ u-boot/board/xilinx/zynq/zynq-fsref/ps7_init_gpl.h
 @@ -0,0 +1,129 @@
 +/******************************************************************************
 +*
-+* Copyright (C) 2018 Xilinx, Inc.  All rights reserved.
++* Copyright (C) 2010-2019 <Xilinx Inc.>
 +*
 +*  This program is free software; you can redistribute it and/or modify
 +*  it under the terms of the GNU General Public License as published by
@@ -1438,15 +1537,16 @@ Index: git/board/xilinx/zynq/zynq-fsref/ps7_init_gpl.h
 +}
 +#endif
 +
-Index: git/configs/zynq_fsref_defconfig
+Index: u-boot/configs/zynq_fsref_defconfig
 ===================================================================
 --- /dev/null
-+++ git/configs/zynq_fsref_defconfig
-@@ -0,0 +1,59 @@
++++ u-boot/configs/zynq_fsref_defconfig
+@@ -0,0 +1,60 @@
 +CONFIG_ARM=y
 +CONFIG_SPL_SYS_DCACHE_OFF=y
 +CONFIG_ARCH_ZYNQ=y
 +CONFIG_SYS_TEXT_BASE=0x4000000
++CONFIG_SYS_LOAD_ADDR=0x0
 +CONFIG_SPL_STACK_R_ADDR=0x200000
 +CONFIG_SPL=y
 +CONFIG_DISTRO_DEFAULTS=y

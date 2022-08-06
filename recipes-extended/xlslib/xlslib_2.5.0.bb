@@ -10,7 +10,7 @@ SRC_URI[md5sum] = "567336ebee41552195c4035c87b9361b"
 SRC_URI[sha256sum] = "05a5d052ffdd6590755949d80d16a56285561557bc9a5e887e3b8b3fef92a3f3"
 
 S = "${WORKDIR}/${BPN}/${BPN}"
-FILES_${PN} = "${libdir} ${includedir}/xlslib"
+FILES:${PN} = "${libdir} ${includedir}/xlslib"
 
 DEPENDS += "automake-native autoconf-native"
 

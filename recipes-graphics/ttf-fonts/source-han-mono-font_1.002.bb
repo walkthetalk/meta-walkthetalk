@@ -20,7 +20,7 @@ do_install() {
     find ./ -name 'SourceHanMono.ttc' -exec install -m 0644 {} ${D}${datadir}/fonts/truetype/ \;
 }
 
-FILES_${PN} = " \
+FILES:${PN} = " \
     ${datadir}/fonts \
 "
 

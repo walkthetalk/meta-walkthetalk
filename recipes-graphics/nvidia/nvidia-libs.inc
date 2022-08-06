@@ -1,13 +1,31 @@
 # Jesus fuck, this is complicated.
 # Read this first: https://devtalk.nvidia.com/default/topic/915640/unix-graphics-announcements-and-news/multiple-glx-client-libraries-in-the-nvidia-linux-driver-installer-package/
 
-PROVIDES += "opencl-nvidia nvidia-utils nvidia-dkms"
+PACKAGES =+ " \
+	opencl-nvidia \
+	nvidia-base \
+	nvidia-allocator \
+	nvidia-egl \
+	nvidia-gbm \
+	nvidia-wayland \
+	nvidia-opengl \
+	nvidia-openglx \
+	nvidia-vulkan \
+	nvidia-vdpau \
+	nvidia-wine \
+	nvidia-raytracing \
+	nvidia-cuda \
+	nvidia-utils \
+	nvidia-dkms \
+	nvidia-xf86 \
+"
 
 do_install:append() {
 	pkgdir=${D}
 	pkgver=${PV}
+        srcdir=${NVIDIA_SRC}
 
-	cd ${NVIDIA_SRC}
+        cd ${srcdir}
 
 	# nvidia-opencl
 	install -Dm644 nvidia.icd "${pkgdir}/etc/OpenCL/vendors/nvidia.icd"
@@ -19,9 +37,9 @@ do_install:append() {
 	ln -s nvidia-utils "${pkgdir}/usr/share/licenses/opencl-nvidia"
 	
 	# nvidia-dkms
-	install -dm 755 "${pkgdir}/usr/src"
-	cp -dr --no-preserve='ownership' kernel "${pkgdir}/usr/src/nvidia-${pkgver}"
-	install -Dt "${pkgdir}/usr/share/licenses/nvidia-dkms" -m644 "LICENSE"
+	#install -dm 755 "${pkgdir}/usr/src"
+	#cp -dr --no-preserve='ownership' kernel "${pkgdir}/usr/src/nvidia-${pkgver}"
+	#install -Dt "${pkgdir}/usr/share/licenses/nvidia-dkms" -m644 "LICENSE"
 	
 	# nvidia-utils
 	# X driver
@@ -147,14 +165,14 @@ do_install:append() {
 	#install -Dm644 nvidia-dbus.conf "${pkgdir}"/usr/share/dbus-1/system.d/nvidia-dbus.conf
 
 	# distro specific files must be installed in /usr/share/X11/xorg.conf.d
-	install -Dm644 "${srcdir}/nvidia-drm-outputclass.conf" "${pkgdir}/usr/share/X11/xorg.conf.d/10-nvidia-drm-outputclass.conf"
+	install -Dm644 "${WORKDIR}/nvidia-drm-outputclass.conf" "${pkgdir}/usr/share/X11/xorg.conf.d/10-nvidia-drm-outputclass.conf"
 
-	install -Dm644 "${srcdir}/nvidia-utils.sysusers" "${pkgdir}/usr/lib/sysusers.d/$pkgname.conf"
+	install -Dm644 "${WORKDIR}/nvidia-utils.sysusers" "${pkgdir}/usr/lib/sysusers.d/nvidia-utils.conf"
 
-	install -Dm644 "${srcdir}/nvidia.rules" "$pkgdir"/usr/lib/udev/rules.d/60-nvidia.rules
+	install -Dm644 "${WORKDIR}/nvidia.rules" "$pkgdir"/usr/lib/udev/rules.d/60-nvidia.rules
 
-	echo "blacklist nouveau" | install -Dm644 /dev/stdin "${pkgdir}/usr/lib/modprobe.d/${pkgname}.conf"
-	echo "nvidia-uvm" | install -Dm644 /dev/stdin "${pkgdir}/usr/lib/modules-load.d/${pkgname}.conf"
+	install -Dm644 "${WORKDIR}/modprobe.conf" "${pkgdir}/usr/lib/modprobe.d/nvidia-utils.conf"
+	install -Dm644 "${WORKDIR}/modules-load.conf" "${pkgdir}/usr/lib/modules-load.d/nvidia-utils.conf"
 
 	################################# extra contents #############################################
 	# CUDA/OPENCL
@@ -187,32 +205,117 @@ do_install:append() {
 	done
 }
 
-do_make_scripts[noexec] = "1"
+FILES:nvidia-base += " \
+	${libdir}/libnvidia-tls.so.* \
+	${libdir}/libnvidia-glsi.so.* \
+"
+INSANE_SKIP:nvidia-base += "ldflags"
 
-FILES_opencl-nvidia += " \
+FILES:nvidia-allocator += " \
+	${libdir}/libnvidia-allocator.so.* \
+"
+INSANE_SKIP:nvidia-allocator += "ldflags"
+
+FILES:opencl-nvidia += " \
 	${libdir}/libnvidia-compiler.so.* \
 	${libdir}/libnvidia-opencl.so.* \
+	${libdir}/libOpenCL.so.* \
 	${sysconfdir}/OpenCL/vendors/nvidia.icd \
 	${datadir}/licenses/opencl-nvidia \
 "
+INSANE_SKIP:opencl-nvidia += "ldflags"
 
-FILES_nvidia-dkms += " \
-	${srcdir}/nvidia-${PV} \
-	${datadir}/licenses/nvidia-dkms \
+FILES:nvidia-egl += " \
+	${libdir}/libEGL_nvidia.so.* \
+	${libdir}/libGLESv1_CM_nvidia.so.* \
+	${libdir}/libGLESv2_nvidia.so.* \
+	${libdir}/libnvidia-eglcore.so.* \
+	${datadir}/glvnd/egl_vendor.d/10_nvidia.json \
 "
+INSANE_SKIP:nvidia-egl += "ldflags"
+RDEPENDS:nvidia-egl += "nvidia-base"
+#RDEPENDS:nvidia-egl += "libglvnd"
 
-FILES_nvidia-utils += " \
-	${libdir}/xorg/modules/drivers \
-	${datadir}/egl/egl_external_platform.d/ \
+FILES:nvidia-gbm += " \
+	${libdir}/libnvidia-egl-gbm.so.* \
 	${libdir}/gbm \
-	${libdir}/firmware/nvidia/${PV} \
-	${libdir}/nvidia/xorg \
-	${libdir}/*.so* \
-	${datadir}/glvnd/egl_vendor.d/ \
+	${datadir}/egl/egl_external_platform.d/15_nvidia_gbm.json \
+"
+INSANE_SKIP:nvidia-gbm += "ldflags dev-so"
+#TODO: drm gbm
+RDEPENDS:nvidia-gbm += "nvidia-allocator"
+
+FILES:nvidia-wayland += " \
+	${libdir}/libnvidia-egl-wayland.so.* \
+	${datadir}/egl/egl_external_platform.d/10_nvidia_wayland.json \
+"
+INSANE_SKIP:nvidia-wayland += "ldflags"
+#RDEPENDS:nvidia-wayland += "wayland"
+
+FILES:nvidia-opengl += " \
+	${libdir}/libnvidia-glcore.so.* \
+"
+INSANE_SKIP:nvidia-opengl += "ldflags"
+RDEPENDS:nvidia-opengl += "nvidia-base"
+
+FILES:nvidia-openglx += " \
+	${libdir}/libGLX_nvidia.so* \
+"
+INSANE_SKIP:nvidia-openglx += "ldflags dev-so"
+#TODO: X11 Xext
+RDEPENDS:nvidia-openglx += "nvidia-opengl"
+
+FILES:nvidia-vulkan += " \
 	${datadir}/vulkan/icd.d \
 	${datadir}/vulkan/implicit_layer.d \
-	${libdir}/vdpau \
+"
+RDEPENDS:nvidia-vulkan += "nvidia-openglx"
+
+FILES:nvidia-vdpau += " \
+	${libdir}/vdpau/libvdpau_nvidia.so* \
+"
+INSANE_SKIP:nvidia-vdpau += "ldflags dev-so"
+# TODO: X11 Xext
+RDEPENDS:nvidia-vdpau += ""
+
+FILES:nvidia-wine += " \
 	${libdir}/nvidia/wine/ \
+"
+
+FILES:nvidia-raytracing += " \
+	${libdir}/libnvoptix.so* \
+	${libdir}/libnvidia-rtcore.so* \
+"
+INSANE_SKIP:nvidia-raytracing += "ldflags dev-so"
+
+FILES:nvidia-cuda += " \
+	${libdir}/libcuda.so.* \
+	${libdir}/libnvcuvid.so.* \
+	${libdir}/libnvidia-ptxjitcompiler.so.* \
+"
+INSANE_SKIP:nvidia-cuda += "ldflags"
+
+FILES:nvidia-dkms += " \
+	${srcdir}/nvidia-${PV} \
+	${datadir}/licenses/nvidia-dkms \
+	${libdir}/mod \
+"
+
+FILES:nvidia-xf86 += " \
+	${libdir}/nvidia/xorg \
+	${libdir}/xorg/modules/drivers \
+	${datadir}/X11/xorg.conf.d \
+"
+INSANE_SKIP:nvidia-xf86 += "ldflags dev-so"
+RDEPENDS:nvidia-xf86 += "nvidia-base nvidia-opengl"
+
+FILES:nvidia-utils += " \
+	${libdir}/modprobe.d \
+	${libdir}/modules-load.d \
+	${libdir}/sysusers.d \
+	${libdir}/udev \
+	${libdir}/firmware/nvidia/${PV} \
+	${libdir}/*.so.* \
 	${bindir} \
 	${datadir}/man/man1 \
 	${libdir}/systemd/system \
@@ -221,16 +324,18 @@ FILES_nvidia-utils += " \
 	${datadir}/licenses/nvidia-utils \
 	${datadir}/doc/nvidia \
 	 \
-	${libdir}/xorg/modules/extensions/ \
 	${mandir} \
-	/lib64 \
 "
 
-RDEPENDS_nvidia-utils += " \
-	libglvnd \
-"
+#INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
+#INHIBIT_PACKAGE_STRIP = "1"
 
-INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
-INHIBIT_PACKAGE_STRIP = "1"
-INSANE_SKIP_${PN}:append = "ldflags already-stripped"
-INSANE_SKIP_libgl-nvidia:append = "ldflags"
+# Package nvidia-utils contains Xorg driver (nvidia_drv.so) but no xorg-abi- dependencies [xorg-driver-abi]
+
+INSANE_SKIP:${PN} += "already-stripped"
+# dev-so '/usr/lib/nvidia/xorg/libglxserver_nvidia.so'
+#        '/usr/lib/vdpau/libvdpau_nvidia.so'
+#        '/usr/lib/gbm/nvidia-drm_gbm.so'
+# arch   '/usr/lib/firmware/nvidia/515.57/gsp.bin'
+INSANE_SKIP:nvidia-utils += "ldflags dev-so arch"
+INSANE_SKIP:opencl-nvidia += "ldflags"

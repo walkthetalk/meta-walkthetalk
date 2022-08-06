@@ -10,20 +10,29 @@ SRC_URI = " \
 	file://nvidia-drm-outputclass.conf \
 	file://nvidia-utils.sysusers \
 	file://nvidia.rules \
+	file://modprobe.conf \
+	file://modules-load.conf \
 "
 
 S = "${NVIDIA_SRC}/kernel"
 
-do_unpack() {
-	chmod +x ${DL_DIR}/${NVIDIA_ARCHIVE_NAME}.run
+do_unpack_custom () {
+	RUNSRC="${WORKDIR}/${NVIDIA_ARCHIVE_NAME}.run"
+	if [[ -x "${RUNSRC}" ]]; then
+		# maybe is a link whose source located in the folder not writable
+		echo "already executable..."
+	else
+		chmod +x "${RUNSRC}"
+	fi
 	rm -rf ${NVIDIA_SRC}
-	${DL_DIR}/${NVIDIA_ARCHIVE_NAME}.run -x --target ${NVIDIA_SRC}
+	"${RUNSRC}" -x --target ${NVIDIA_SRC}
 
 	cd ${NVIDIA_SRC}
-	bsdtar -xf nvidia-persistenced-init.tar.bz2
+	tar -xf nvidia-persistenced-init.tar.bz2
 }
 
-do_unpack:append() {
+do_patch_custom () {
+	cd ${S}
 	sed -i "s/__VERSION_STRING/${PV}/" dkms.conf
 	sed -i 's/__JOBS/`nproc`/' dkms.conf
 	sed -i 's/__DKMS_MODULES//' dkms.conf
@@ -42,6 +51,13 @@ DEST_MODULE_LOCATION[4]="/kernel/drivers/video"' dkms.conf
 	sed -i 's/NV_EXCLUDE_BUILD_MODULES/IGNORE_PREEMPT_RT_PRESENCE=1 NV_EXCLUDE_BUILD_MODULES/' dkms.conf
 }
 
-do_make_scripts[noexec] = "1"
+do_unpack:append() {
+    bb.build.exec_func("do_unpack_custom", d)
+}
+do_patch:prepend() {
+    bb.build.exec_func("do_patch_custom", d)
+}
+
+#do_make_scripts[noexec] = "1"
 
 RDEPENDS_${PN} += " libglapi"

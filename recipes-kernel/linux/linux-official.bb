@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=6bc538ed5bd9a7fc9398086aedcd7e46"
 inherit kernel
 
 LINUX_VERSION_EXTENSION = "-optimus"
-LINUX_VERSION = "5.14.12"
+LINUX_VERSION = "5.15.53"
 
 PV = "${LINUX_VERSION}"
 PR = "1"
@@ -21,8 +21,8 @@ SRC_URI:append:fsref = " \
 	file://system.bit.bin.tm050 \
 "
 
-SRC_URI[md5sum] = "a52286fe206a3f7664ca5a6c5995b9ed"
-SRC_URI[sha256sum] = "8d272679dc5285136bfe1f6d54548c7cf9f1ed8925c04b8bae149c8983eb5c37"
+SRC_URI[md5sum] = "2c28b3a681c90f52c1501998f34ec659"
+SRC_URI[sha256sum] = "f3aa717243051f3fcca90ebfe26fe5c3a596c2f6047846e8d1724ea90df77b07"
 
 S = "${WORKDIR}/linux-${LINUX_VERSION}"
 

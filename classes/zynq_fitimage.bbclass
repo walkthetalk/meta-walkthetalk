@@ -376,6 +376,34 @@ symlink_points_below() {
 }
 
 #
+# Emit the fitImage ITS fpga section
+#
+# $1 ... .its filename
+# $2 ... Image counter
+# $3 ... Path to fpga image
+fitimage_emit_section_fpga() {
+
+	fpga_csum="${FIT_HASH_ALG}"
+	fpga_sign_algo="${FIT_SIGN_ALG}"
+	fpga_sign_keyname="${UBOOT_SIGN_IMG_KEYNAME}"
+
+	cat << EOF >> $1
+                fpga-$2 {
+                        description = "fpga $2";
+                        data = /incbin/("$3");
+                        type = "fpga";
+                        arch = "${UBOOT_ARCH}";
+                        compression = "none";
+                        load = <$4>;
+                        hash-1 {
+                                algo = "$fpga_csum";
+                        };
+                };
+EOF
+
+}
+
+#
 # Emit the fitImage ITS configuration section
 #
 # $1 ... .its filename
@@ -408,6 +436,7 @@ fitimage_emit_section_config() {
 	conf_node="${FIT_CONF_PREFIX}"
 	kernel_line=""
 	fdt_line=""
+	loadables_line=""
 	ramdisk_line=""
 	bootscr_line=""
 	setup_line=""
@@ -468,12 +497,17 @@ fitimage_emit_section_config() {
 		fi
 	fi
 
+	if [ -n "${FPGA_FILENAME}" ]; then
+		loadables_line="loadables = \"fpga-1\";"
+	fi
+
 	cat << EOF >> $its_file
                 $default_line
                 $conf_node {
                         description = "$default_flag $conf_desc";
                         $kernel_line
                         $fdt_line
+                        $loadables_line
                         $ramdisk_line
                         $bootscr_line
                         $setup_line
@@ -647,6 +681,13 @@ fitimage_assemble() {
 		if [ -z "$found" ]; then
 			bbfatal "Could not find a valid initramfs type for ${INITRAMFS_IMAGE_NAME}, the supported types are: ${FIT_SUPPORTED_INITRAMFS_FSTYPES}"
 		fi
+	fi
+
+	#
+	# Step 5.1: Prepare a fpga section
+	#
+	if [ -n "${FPGA_FILENAME}" ]; then
+		fitimage_emit_section_fpga $1 1 "../${FPGA_FILENAME}" "${FPGA_LOADADDR}"
 	fi
 
 	fitimage_emit_section_maint $1 sectend

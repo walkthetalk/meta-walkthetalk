@@ -276,30 +276,6 @@ PACKAGECONFIG:append:pn-qemu-system-native = " sdl"
 CONF_VERSION = "2"
 
 # custom
-DEV_SRV_URL := "/mnt/datum/repositories"
-
-#GITHUB_MIRROR := "git://github.com"
-#GITHUB_PROTOCOL := "https"
-GITHUB_MIRROR := "git://${DEV_SRV_URL}/github.com"
-GITHUB_PROTOCOL := "file"
-
-QT_GIT := "git://${DEV_SRV_URL}/code.qt.io"
-QT_GIT_PROJECT := "qt"
-QT_GIT_PROTOCOL := "file"
-
-LLVM_GIT := "${GITHUB_MIRROR}/llvm-mirror"
-LLVM_GIT_PROTOCOL := "file"
-
-SOURCEWARE_GIT_URI := "git://${DEV_SRV_URL}/sourceware.org"
-SOURCEWARE_PROTOCOL := "file"
-
-GLIBC_GIT_URI := "${SOURCEWARE_GIT_URI}/git/glibc.git"
-BINUTILS_GIT_URI := "${SOURCEWARE_GIT_URI}/git/binutils-gdb.git;branch=${SRCBRANCH};protocol=${SOURCEWARE_PROTOCOL}"
-
-SOURCE_MIRROR_URL := "file:///mnt/datum/iso/yocto-sources/sources"
-INHERIT += "own-mirrors"
-
-BB_GENERATE_MIRROR_TARBALLS = "1"
 INHERIT += "read_only_rootfs_systemd"
 
 NO_RECOMMENDATIONS = "1"
@@ -310,3 +286,17 @@ IMAGE_LINGUAS = "en-gb en-us"
 DEFAULT_TIMEZONE = "Asia/Hong_Kong"
 INHERIT += "rm_work"
 CCACHE = ""
+
+#only use physical cpu cores
+BB_NUMBER_THREADS="16"
+PARALLEL_MAKE="-j 16"
+
+BB_GENERATE_MIRROR_TARBALLS = "0"
+BB_NO_NETWORK = "1"
+BB_FETCH_PREMIRRORONLY="1"
+SOURCE_MIRROR_URL := "file:///mnt/datum/iso/yocto-sources/sources"
+# TYPE HOST PATH BASENAME MIRRORNAME
+PREMIRRORS:prepend = " \
+git://.*/.*     git:///mnt/datum/repositories/HOST/PATH;protocol=file \
+https?://.*/.*  ${SOURCE_MIRROR_URL} \
+"

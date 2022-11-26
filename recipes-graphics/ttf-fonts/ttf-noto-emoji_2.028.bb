@@ -5,7 +5,7 @@ HOMEPAGE = "https://github.com/googlefonts/noto-emoji"
 LICENSE = "OFL-1.1"
 LIC_FILES_CHKSUM = "file://fonts/LICENSE;md5=55719faa0112708e946b820b24b14097"
 
-SRC_URI = "${GITHUB_MIRROR}/googlefonts/noto-emoji;protocol=${GITHUB_PROTOCOL}"
+SRC_URI = "git://github.com/googlefonts/noto-emoji.git;protocol=https;branch=master"
 SRCREV = "6f11c8db698594bd982b90b5a07b2c0ee62bb145"
 
 PACKAGES = "${PN}-color ${PN}-regular"

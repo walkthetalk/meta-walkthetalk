@@ -5,9 +5,9 @@ LIC_FILES_CHKSUM = "file://LICENSE.rst;md5=af88d758f75f3c5c48a967501f24384b"
 
 DEPENDS = "zlib"
 
-S = "${WORKDIR}/git"
-SRCREV = "b6f4ceaed0a0a24ccf575fab6c56dd50ccf6f1a9"
-SRC_URI = "${GITHUB_MIRROR}/fmtlib/fmt.git;protocol=${GITHUB_PROTOCOL};usehead=1"
+S = "${WORKDIR}/fmt-${PV}"
+SRC_URI = "https://github.com/fmtlib/fmt/releases/download/${PV}/fmt-${PV}.zip"
+SRC_URI[sha256sum] = "cceb4cb9366e18a5742128cb3524ce5f50e88b476f1e54737a47ffdf4df4c996"
 
 UPSTREAM_CHECK_URI = "https://github.com/fmtlib/${BPN}/releases"
 UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>\d+(\.\d+)+)"

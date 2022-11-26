@@ -7,7 +7,7 @@ DEPENDS = "zlib"
 
 S = "${WORKDIR}/git"
 SRCREV = "8d605f0649ed1ab6d27a443c7688598ea21fdb75"
-SRC_URI = "${GITHUB_MIRROR}/warmcat/libwebsockets.git;protocol=${GITHUB_PROTOCOL};branch=v4.2-stable"
+SRC_URI = "git://github.com/warmcat/libwebsockets.git;protocol=https;branch=v4.2-stable"
 
 UPSTREAM_CHECK_URI = "https://github.com/warmcat/${BPN}/releases"
 UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>\d+(\.\d+)+)"

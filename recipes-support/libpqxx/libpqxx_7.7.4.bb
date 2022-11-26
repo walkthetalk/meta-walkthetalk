@@ -1,9 +1,9 @@
 DESCRIPTION = "C++ client API for PostgreSQL"
 SECTION = "libs"
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://COPYING;md5=fe6a87ebf0a117888ce73e60a1e46d18"
+LIC_FILES_CHKSUM = "file://COPYING;md5=227be903d79fb9bf45c7d1fe4d7cf0cd"
 
-PV = "7.6.0"
+PV = "7.7.4"
 PR = "r1"
 
 inherit autotools
@@ -18,7 +18,7 @@ RDEPENDS_${PN} = " \
 	libpq \
 "
 
-SRCREV = "221ddc8be329bafb376a3d83b9cd257fd52fc7b7"
+SRCREV = "17e5a6c8ac3abc05329891aaa378bd6004b9c8ee"
 SRC_URI = " \
 	${GITHUB_MIRROR}/jtv/libpqxx.git;protocol=${GITHUB_PROTOCOL};branch=master \
 	"
@@ -36,7 +36,7 @@ EXTRA_OECONF = " \
 "
 
 FILES:${PN} = " \
-	${libdir}/libpqxx-7.6.so \
+	${libdir}/libpqxx-7.7.so \
 	${bindir}/pqxx-config \
 "
 

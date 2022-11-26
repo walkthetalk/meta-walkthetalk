@@ -277,17 +277,24 @@ CONF_VERSION = "2"
 
 # custom
 DEV_SRV_URL := "/mnt/datum/repositories"
-LLVM_GIT := "git://${DEV_SRV_URL}/llvm-mirror"
-LLVM_GIT_PROTOCOL := "file"
-QT_GIT := "git://${DEV_SRV_URL}"
-QT_GIT_PROJECT := "qt"
-QT_GIT_PROTOCOL := "file"
-GLIBC_GIT_URI := "git://${DEV_SRV_URL}/sourceware.org/glibc.git"
 
 #GITHUB_MIRROR := "git://github.com"
 #GITHUB_PROTOCOL := "https"
-GITHUB_MIRROR := "git://${DEV_SRV_URL}"
+GITHUB_MIRROR := "git://${DEV_SRV_URL}/github.com"
 GITHUB_PROTOCOL := "file"
+
+QT_GIT := "git://${DEV_SRV_URL}/code.qt.io"
+QT_GIT_PROJECT := "qt"
+QT_GIT_PROTOCOL := "file"
+
+LLVM_GIT := "${GITHUB_MIRROR}/llvm-mirror"
+LLVM_GIT_PROTOCOL := "file"
+
+SOURCEWARE_GIT_URI := "git://${DEV_SRV_URL}/sourceware.org"
+SOURCEWARE_PROTOCOL := "file"
+
+GLIBC_GIT_URI := "${SOURCEWARE_GIT_URI}/git/glibc.git"
+BINUTILS_GIT_URI := "${SOURCEWARE_GIT_URI}/git/binutils-gdb.git;branch=${SRCBRANCH};protocol=${SOURCEWARE_PROTOCOL}"
 
 SOURCE_MIRROR_URL := "file:///mnt/datum/iso/yocto-sources/sources"
 INHERIT += "own-mirrors"

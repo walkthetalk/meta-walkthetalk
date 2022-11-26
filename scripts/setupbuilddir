@@ -84,7 +84,7 @@ if ! [ -f ${FINAL_BUILD_SCRIPT} ]; then
 	# copy build script
 	cat ${ORIGINAL_BUILD_SCRIPT} | \
 		sed "s:^OE_ENV_SCRIPT.*:OE_ENV_SCRIPT=\"${OE_ENV_SCRIPT}\":" | \
-		sed "s:^export TEMPLATECONF=.*:export TEMPLATECONF=\"${PANGUBASE}/meta-walkthetalk/conf\":" > ${FINAL_BUILD_SCRIPT}
+		sed "s:^export TEMPLATECONF=.*:export TEMPLATECONF=\"${PANGUBASE}/meta-walkthetalk/conf/templates/default\":" > ${FINAL_BUILD_SCRIPT}
 	chmod +x ${FINAL_BUILD_SCRIPT}
 
 	# execute to generate conf files

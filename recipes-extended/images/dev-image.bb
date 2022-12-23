@@ -18,6 +18,10 @@ IMAGE_INSTALL = "\
 	i2c-tools \
 	evtest \
 	mtd-utils \
+	dosfstools \
+	e2fsprogs-mke2fs \
+	e2fsprogs-resize2fs \
+	e2fsprogs-tune2fs \
 	strace \
 	sudo \
 	libwebsockets \

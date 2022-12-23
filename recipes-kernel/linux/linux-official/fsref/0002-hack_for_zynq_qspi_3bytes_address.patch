@@ -1,0 +1,31 @@
+Index: kernel-source/drivers/mtd/spi-nor/core.c
+===================================================================
+--- kernel-source.orig/drivers/mtd/spi-nor/core.c
++++ kernel-source/drivers/mtd/spi-nor/core.c
+@@ -2116,13 +2116,6 @@ static int spi_nor_hwcaps_pp2cmd(u32 hwc
+ static int spi_nor_spimem_check_op(struct spi_nor *nor,
+ 				   struct spi_mem_op *op)
+ {
+-	/*
+-	 * First test with 4 address bytes. The opcode itself might
+-	 * be a 3B addressing opcode but we don't care, because
+-	 * SPI controller implementation should not check the opcode,
+-	 * but just the sequence.
+-	 */
+-	op->addr.nbytes = 4;
+ 	if (!spi_mem_supports_op(nor->spimem, op)) {
+ 		if (nor->mtd.size > SZ_16M)
+ 			return -EOPNOTSUPP;
+@@ -3011,10 +3004,8 @@ static int spi_nor_set_addr_width(struct
+ 		nor->addr_width = 3;
+ 	}
+ 
+-	if (nor->addr_width == 3 && nor->mtd.size > 0x1000000) {
+-		/* enable 4-byte addressing if the device exceeds 16MiB */
+-		nor->addr_width = 4;
+-	}
++	/* hack for zynq qspi controller */
++	nor->addr_width = 3;
+ 
+ 	if (nor->addr_width > SPI_NOR_MAX_ADDR_WIDTH) {
+ 		dev_dbg(nor->dev, "address width is too large: %u\n",

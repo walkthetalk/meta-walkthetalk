@@ -1,0 +1,14 @@
+Index: git/common/spl/spl.c
+===================================================================
+--- git.orig/common/spl/spl.c
++++ git/common/spl/spl.c
+@@ -617,6 +617,9 @@ static struct spl_image_loader *spl_ll_f
+ 		ll_entry_count(struct spl_image_loader, spl_image_loader);
+ 	struct spl_image_loader *entry;
+ 
++	if (boot_device == BOOT_DEVICE_SPI) {
++		boot_device = BOOT_DEVICE_MMC2;
++	}
+ 	for (entry = drv; entry != drv + n_ents; entry++) {
+ 		if (boot_device == entry->boot_device)
+ 			return entry;

@@ -14,8 +14,11 @@ PR = "1"
 SRC_URI = "http://www.kernel.org/pub/linux/kernel/v5.x/linux-${LINUX_VERSION}.tar.xz \
 "
 
+# NOTE: for zynq qspi problem:
+# https://support.xilinx.com/s/question/0D52E00006hpObcSAE/linux-qspi-driver-and-4-byte-address
 SRC_URI:append:fsref = " \
 	file://0001-simplefb-add-memory-region-support-for-device-tree.patch \
+	file://0002-hack_for_zynq_qspi_3bytes_address.patch \
 	file://add_fsref.patch \
 	file://add_sys_file_for_load_bitstream.patch \
 	file://system.bit.bin.tm050 \

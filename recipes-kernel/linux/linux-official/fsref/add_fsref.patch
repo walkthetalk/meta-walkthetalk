@@ -124,7 +124,7 @@ Index: linux/arch/arm/boot/dts/zynq-fsref-emmc.dts
 +
 +	gpio-poweroff {
 +		compatible = "gpio-poweroff";
-+		gpios = <&gpio0 67 GPIO_ACTIVE_LOW>;
++		gpios = <&gpio0 67 GPIO_ACTIVE_HIGH>;
 +	};
 +
 +	leds {
@@ -618,7 +618,7 @@ Index: linux/arch/arm/boot/dts/zynq-fsref-sdcard.dts
 +
 +	gpio-poweroff {
 +		compatible = "gpio-poweroff";
-+		gpios = <&gpio0 67 GPIO_ACTIVE_LOW>;
++		gpios = <&gpio0 67 GPIO_ACTIVE_HIGH>;
 +	};
 +
 +	leds {
